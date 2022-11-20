@@ -25,6 +25,6 @@ private:
   bool parseAvailableModules(const QString &file);
 
   Ui::MainWindow *ui;
-  QList<ModuleConfiguration> mAvailableModules;
+  QList<ModuleConfiguration *> mAvailableModules;
 };
 #endif // MAINWINDOW_H

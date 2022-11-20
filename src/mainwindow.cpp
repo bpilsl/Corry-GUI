@@ -3,6 +3,11 @@
 
 #include <QDebug>
 #include <QFileDialog>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
+#include <QJsonValue>
 #include <QRegularExpression>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -18,13 +23,23 @@ bool MainWindow::parseAvailableModules(const QString &file) {
     return false;
   }
   auto content = QString(f.readAll());
-  auto modules = content.split(QRegularExpression(".+[.+].+"));
+  auto jsonDocument = QJsonDocument::fromJson(content.toUtf8());
 
-  foreach (const auto &module, modules) {
-    ModuleConfiguration config(module);
-    mAvailableModules.append(config);
+  if (!jsonDocument.isArray()) {
+    qDebug() << "It is not a JSON array";
+    return false;
   }
 
+  auto modules = jsonDocument.array();
+
+  for (const auto &module : modules) {
+    if (!module.isObject()) {
+      qWarning() << "module description is no json object";
+      continue;
+    }
+    auto config = new ModuleConfiguration(module.toObject(), this);
+    mAvailableModules.append(config);
+  }
   return true;
 }
 
