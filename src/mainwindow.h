@@ -4,6 +4,7 @@
 #include "moduleconfigurator.h"
 
 #include <QMainWindow>
+#include <QStandardItemModel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -26,5 +27,6 @@ private:
 
   Ui::MainWindow *ui;
   QList<ModuleConfiguration *> mAvailableModules;
+  QStandardItemModel mModulesModel;
 };
 #endif // MAINWINDOW_H

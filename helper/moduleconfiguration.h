@@ -17,6 +17,13 @@ public:
                                QObject *parent = nullptr);
 
   void initFromJson(const QJsonObject &obj);
+  auto name() const { return mName; };
+  auto defaultValue(const QString &module) const {
+    return mParameters[module]->defaultValue;
+  }
+  auto setValue(const QString &module, const QVariant &val) {
+    mParameters[module]->value = val;
+  }
 
 signals:
 

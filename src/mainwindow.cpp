@@ -13,6 +13,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
+  ui->lvModules->setModel(&mModulesModel);
 }
 
 MainWindow::~MainWindow() { delete ui; }
@@ -48,4 +49,12 @@ void MainWindow::on_pbLoad_clicked() {
   if (!parseAvailableModules(file)) {
     qWarning() << "failed to parse file " << file;
   }
+  mModulesModel.clear();
+  int i = 0;
+  foreach (const auto module, mAvailableModules) {
+    auto item = new QStandardItem(module->name());
+    mModulesModel.setItem(i, item);
+    i++;
+  }
+  mModulesModel.sort(0);
 }
