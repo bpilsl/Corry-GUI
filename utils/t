@@ -1,0 +1,1 @@
+{"module_name": "AnalysisEfficiency", "parameters": {"time_cut_frameedge": " Units::get<double>(20, \"ns\")", "chi2ndof_cut": " 3.", "inpixel_bin_size": " Units::get<double>(1.0, \"um\")", "inpixel_cut_edge": " {Units::get(5.0, \"um\"), Units::get(5.0, \"um\")}", "masked_pixel_distance_cut": " 1.", "spatial_cut_sensoredge": " 1."}}
