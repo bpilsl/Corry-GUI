@@ -33,3 +33,5 @@
 
 #Qt Project file
 *.user
+
+.idea/

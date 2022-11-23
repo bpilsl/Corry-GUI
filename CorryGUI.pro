@@ -10,12 +10,14 @@ CONFIG += c++17
 
 SOURCES += \
     helper/moduleconfiguration.cpp \
+    helper/corrymodulemodel.cpp \
     src/moduleconfigurator.cpp \
     src/main.cpp \
     src/mainwindow.cpp
 
 HEADERS += \
     helper/moduleconfiguration.h \
+    helper/corrymodulemodel.h \
     src/moduleconfigurator.h \
     src/mainwindow.h
 

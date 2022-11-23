@@ -12,7 +12,7 @@ ModuleConfiguration::ModuleConfiguration(const QJsonObject &obj,
 
 void ModuleConfiguration::initFromJson(const QJsonObject &obj) {
   mName = obj["module_name"].toString();
-  qDebug() << "\n\n module: " << mName;
+  //  qDebug() << "\n\n module: " << mName;
   auto params = obj["parameters"];
 
   if (!params.isObject()) {

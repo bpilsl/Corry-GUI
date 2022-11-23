@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "moduleconfigurator.h"
+#include "../helper/corrymodulemodel.h"
 
 #include <QMainWindow>
 #include <QStandardItemModel>
@@ -22,11 +22,14 @@ public:
 private slots:
   void on_pbLoad_clicked();
 
+  void on_pushButton_clicked();
+
 private:
   bool parseAvailableModules(const QString &file);
 
   Ui::MainWindow *ui;
   QList<ModuleConfiguration *> mAvailableModules;
   QStandardItemModel mModulesModel;
+  CorryConfigModel mConfigModel;
 };
 #endif // MAINWINDOW_H
