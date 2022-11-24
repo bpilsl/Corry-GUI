@@ -10,6 +10,15 @@ ModuleConfiguration::ModuleConfiguration(const QJsonObject &obj,
   initFromJson(obj);
 }
 
+ModuleConfiguration::ModuleConfiguration(const ModuleConfiguration &other,
+                                         QObject *parent) {
+  mName = other.name();
+  this->setParent(parent);
+  foreach (const auto key, other.mParameters.keys()) {
+    mParameters[key] = new Parameter(*other.mParameters[key]);
+  }
+}
+
 void ModuleConfiguration::initFromJson(const QJsonObject &obj) {
   mName = obj["module_name"].toString();
   //  qDebug() << "\n\n module: " << mName;

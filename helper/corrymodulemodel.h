@@ -6,13 +6,15 @@
 #include <QMimeData>
 #include <QStandardItem>
 
+#include "../src/moduleconfigurator.h"
 #include "moduleconfiguration.h"
 
 class CorryConfigModel : public QAbstractItemModel {
   Q_OBJECT
 
 public:
-  explicit CorryConfigModel(QObject *parent = nullptr);
+  explicit CorryConfigModel(ModuleConfigurator *configurator,
+                            QObject *parent = nullptr);
 
   // Header:
   QVariant headerData(int section, Qt::Orientation orientation,
@@ -49,10 +51,19 @@ public:
 
   Qt::ItemFlags flags(const QModelIndex &index) const override;
 
+  bool parseAvailableModules(const QString &file);
+  ModuleConfiguration moduleDefaultConfig(const QString &name);
+  auto availableModules() { return mAvailableModules; };
+
 private:
-  QList<ModuleConfiguration> mModules;
+  QList<ModuleConfiguration *> mModules;
+  ModuleConfigurator *mConfigurator;
+  QList<ModuleConfiguration *> mAvailableModules;
 
   void decodeMimeData(const QByteArray &data, QStandardItem &item);
+
+private slots:
+  void acceptConfiguredModule();
 };
 
 #endif // CORRYMODULEMODEL_H

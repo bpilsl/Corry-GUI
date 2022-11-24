@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "../helper/corrymodulemodel.h"
+#include "moduleconfigurator.h"
 
 #include <QMainWindow>
 #include <QStandardItemModel>
@@ -25,10 +26,9 @@ private slots:
   void on_pushButton_clicked();
 
 private:
-  bool parseAvailableModules(const QString &file);
-
   Ui::MainWindow *ui;
-  QList<ModuleConfiguration *> mAvailableModules;
+  ModuleConfigurator *mModuleConfigurator;
+
   QStandardItemModel mModulesModel;
   CorryConfigModel mConfigModel;
 };

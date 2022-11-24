@@ -11,7 +11,9 @@
 #include <QRegularExpression>
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow) {
+    : QMainWindow(parent), ui(new Ui::MainWindow),
+      mModuleConfigurator(new ModuleConfigurator(this)),
+      mConfigModel(mModuleConfigurator) {
   ui->setupUi(this);
   ui->lvModules->setModel(&mModulesModel);
   ui->lvModules->setDragEnabled(true);
@@ -22,41 +24,15 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() { delete ui; }
 
-bool MainWindow::parseAvailableModules(const QString &file) {
-  QFile f(file);
-  if (!f.open(QIODevice::ReadOnly)) {
-    return false;
-  }
-  auto content = QString(f.readAll());
-  auto jsonDocument = QJsonDocument::fromJson(content.toUtf8());
-
-  if (!jsonDocument.isArray()) {
-    qWarning() << "Given json file does not contain top level array";
-    return false;
-  }
-
-  auto modules = jsonDocument.array();
-
-  for (const auto &module : modules) {
-    if (!module.isObject()) {
-      qWarning() << "module description is no json object";
-      continue;
-    }
-    auto config = new ModuleConfiguration(module.toObject(), this);
-    mAvailableModules.append(config);
-  }
-  return true;
-}
-
 void MainWindow::on_pbLoad_clicked() {
   auto file = QFileDialog::getOpenFileName(this);
-  if (!parseAvailableModules(file)) {
+  if (!mConfigModel.parseAvailableModules(file)) {
     qWarning() << "failed to parse file " << file;
   }
 
   mModulesModel.clear();
   int i = 0;
-  foreach (const auto module, mAvailableModules) {
+  foreach (const auto module, mConfigModel.availableModules()) {
     auto item = new QStandardItem(module->name());
     item->setData(module->name(), Qt::DisplayRole);
     mModulesModel.setItem(i, item);
