@@ -6,7 +6,7 @@
 
 CorryConfigModel::CorryConfigModel(ModuleConfigurator *configurator,
                                    QObject *parent)
-    : QAbstractItemModel(parent), mConfigurator(configurator) {
+    : QAbstractTableModel(parent), mConfigurator(configurator) {
 
   connect(mConfigurator, &ModuleConfigurator::accepted, this,
           &CorryConfigModel::acceptConfiguredModule);
@@ -16,17 +16,6 @@ QVariant CorryConfigModel::headerData(int section, Qt::Orientation orientation,
                                       int role) const {
   qDebug() << "calling header data";
   return QVariant();
-}
-
-QModelIndex CorryConfigModel::index(int row, int column,
-                                    const QModelIndex &parent) const {
-  return createIndex(row, column);
-}
-
-QModelIndex CorryConfigModel::parent(const QModelIndex &index) const {
-  // FIXME: Implement me!
-  qDebug() << "calling parent";
-  return createIndex(0, 0);
 }
 
 int CorryConfigModel::rowCount(const QModelIndex &parent) const {
@@ -59,59 +48,27 @@ QVariant CorryConfigModel::data(const QModelIndex &index, int role) const {
     qDebug() << "returning " << QVariant(mModules[index.row()]->name());
     retval = QVariant(mModules[index.row()]->name());
     break;
-  case Qt::DecorationRole:
-    retval = QVariant(QColor("red"));
-    break;
-  case Qt::FontRole:
-    retval = QVariant(QFont("Times", 20, 5));
-    break;
-  case Qt::TextAlignmentRole:
-    retval = QVariant(Qt::AlignLeft);
-    break;
-  case Qt::ForegroundRole:
-    retval = QVariant(QBrush(Qt::yellow));
-    break;
-  case Qt::BackgroundRole:
-    retval = QVariant(QBrush(Qt::red));
-    break;
-  case Qt::SizeHintRole:
-    retval = QVariant(QSize(100, 50));
-    break;
+    //  case Qt::DecorationRole:
+    //    retval = QVariant(QColor("red"));
+    //    break;
+    //  case Qt::FontRole:
+    //    retval = QVariant(QFont("Times", 20, 5));
+    //    break;
+    //  case Qt::TextAlignmentRole:
+    //    retval = QVariant(Qt::AlignLeft);
+    //    break;
+    //  case Qt::ForegroundRole:
+    //    retval = QVariant(QBrush(Qt::yellow));
+    //    break;
+    //  case Qt::BackgroundRole:
+    //    retval = QVariant(QBrush(Qt::red));
+    //    break;
+    //  case Qt::SizeHintRole:
+    //    retval = QVariant(QSize(100, 50));
+    //    break;
   }
   qDebug() << "returning " << retval;
   return retval;
-}
-
-bool CorryConfigModel::insertRows(int row, int count,
-                                  const QModelIndex &parent) {
-  beginInsertRows(parent, row, row + count - 1);
-  // FIXME: Implement me!
-  endInsertRows();
-  return true;
-}
-
-bool CorryConfigModel::insertColumns(int column, int count,
-                                     const QModelIndex &parent) {
-  beginInsertColumns(parent, column, column + count - 1);
-  // FIXME: Implement me!
-  endInsertColumns();
-  return true;
-}
-
-bool CorryConfigModel::removeRows(int row, int count,
-                                  const QModelIndex &parent) {
-  beginRemoveRows(parent, row, row + count - 1);
-  // FIXME: Implement me!
-  endRemoveRows();
-  return true;
-}
-
-bool CorryConfigModel::removeColumns(int column, int count,
-                                     const QModelIndex &parent) {
-  beginRemoveColumns(parent, column, column + count - 1);
-  // FIXME: Implement me!
-  endRemoveColumns();
-  return true;
 }
 
 bool CorryConfigModel::dropMimeData(const QMimeData *data,
