@@ -6,7 +6,7 @@
 
 CorryConfigModel::CorryConfigModel(ModuleConfigurator *configurator,
                                    QObject *parent)
-    : QAbstractTableModel(parent), mConfigurator(configurator) {
+    : QAbstractListModel(parent), mConfigurator(configurator) {
 
   connect(mConfigurator, &ModuleConfigurator::accepted, this,
           &CorryConfigModel::acceptConfiguredModule);
@@ -25,27 +25,14 @@ int CorryConfigModel::rowCount(const QModelIndex &parent) const {
   return mModules.length();
 }
 
-int CorryConfigModel::columnCount(const QModelIndex &parent) const {
-  //  if (!parent.isValid())
-  //    return 0;
-
-  if (mModules.length() > 0) {
-    return 1;
-  } else {
-    return 0;
-  }
-}
-
 QVariant CorryConfigModel::data(const QModelIndex &index, int role) const {
   QVariant retval;
-  qDebug() << " asking data of " << index.row() << " for role " << role;
   if (!index.isValid()) {
     return retval;
   }
 
   switch (role) {
   case Qt::DisplayRole:
-    qDebug() << "returning " << QVariant(mModules[index.row()]->name());
     retval = QVariant(mModules[index.row()]->name());
     break;
     //  case Qt::DecorationRole:
@@ -74,9 +61,8 @@ QVariant CorryConfigModel::data(const QModelIndex &index, int role) const {
 bool CorryConfigModel::dropMimeData(const QMimeData *data,
                                     Qt::DropAction action, int row, int column,
                                     const QModelIndex &parent) {
-  const QString mimeType = "application/x-qstandarditemmodeldatalist";
 
-  if (data->hasFormat(mimeType)) {
+  if (canDecodeMime(*data)) {
     QStandardItem item;
     if (!decodeMimeData(*data, item)) {
       return false;

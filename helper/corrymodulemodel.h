@@ -9,7 +9,7 @@
 #include "../src/moduleconfigurator.h"
 #include "moduleconfiguration.h"
 
-class CorryConfigModel : public QAbstractTableModel {
+class CorryConfigModel : public QAbstractListModel {
   Q_OBJECT
 
 public:
@@ -27,7 +27,7 @@ public:
   //  QModelIndex parent(const QModelIndex &index) const override;
 
   int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-  int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+  //  int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
   QVariant data(const QModelIndex &index,
                 int role = Qt::DisplayRole) const override;
