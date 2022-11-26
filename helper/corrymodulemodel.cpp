@@ -14,41 +14,72 @@ CorryConfigModel::CorryConfigModel(ModuleConfigurator *configurator,
 
 QVariant CorryConfigModel::headerData(int section, Qt::Orientation orientation,
                                       int role) const {
-  // FIXME: Implement me!
+  qDebug() << "calling header data";
+  return QVariant();
 }
 
 QModelIndex CorryConfigModel::index(int row, int column,
                                     const QModelIndex &parent) const {
-  // FIXME: Implement me!
+  return createIndex(row, column);
 }
 
 QModelIndex CorryConfigModel::parent(const QModelIndex &index) const {
   // FIXME: Implement me!
+  qDebug() << "calling parent";
+  return createIndex(0, 0);
 }
 
 int CorryConfigModel::rowCount(const QModelIndex &parent) const {
-  if (!parent.isValid())
-    return 0;
+  //  if (!parent.isValid())
+  //    return 0;
 
-  // FIXME: Implement me!
+  return mModules.length();
 }
 
 int CorryConfigModel::columnCount(const QModelIndex &parent) const {
-  if (!parent.isValid())
-    return 0;
+  //  if (!parent.isValid())
+  //    return 0;
 
-  // FIXME: Implement me!
+  if (mModules.length() > 0) {
+    return 1;
+  } else {
+    return 0;
+  }
 }
 
 QVariant CorryConfigModel::data(const QModelIndex &index, int role) const {
-  qDebug() << " asking data of " << index.row();
-  if (!index.isValid())
-    return QVariant();
-
-  if (role == Qt::DisplayRole) {
-    return QVariant(mModules[index.row()]->name());
+  QVariant retval;
+  qDebug() << " asking data of " << index.row() << " for role " << role;
+  if (!index.isValid()) {
+    return retval;
   }
-  return QVariant();
+
+  switch (role) {
+  case Qt::DisplayRole:
+    qDebug() << "returning " << QVariant(mModules[index.row()]->name());
+    retval = QVariant(mModules[index.row()]->name());
+    break;
+  case Qt::DecorationRole:
+    retval = QVariant(QColor("red"));
+    break;
+  case Qt::FontRole:
+    retval = QVariant(QFont("Times", 20, 5));
+    break;
+  case Qt::TextAlignmentRole:
+    retval = QVariant(Qt::AlignLeft);
+    break;
+  case Qt::ForegroundRole:
+    retval = QVariant(QBrush(Qt::yellow));
+    break;
+  case Qt::BackgroundRole:
+    retval = QVariant(QBrush(Qt::red));
+    break;
+  case Qt::SizeHintRole:
+    retval = QVariant(QSize(100, 50));
+    break;
+  }
+  qDebug() << "returning " << retval;
+  return retval;
 }
 
 bool CorryConfigModel::insertRows(int row, int count,
@@ -90,7 +121,9 @@ bool CorryConfigModel::dropMimeData(const QMimeData *data,
 
   if (data->hasFormat(mimeType)) {
     QStandardItem item;
-    decodeMimeData(data->data(mimeType), item);
+    if (!decodeMimeData(*data, item)) {
+      return false;
+    }
     qDebug() << "dropped item " << item.data(0);
     auto chosenModule = item.data(0).toString();
     ModuleConfiguration *config = nullptr;
@@ -105,11 +138,16 @@ bool CorryConfigModel::dropMimeData(const QMimeData *data,
     }
     auto accepted = mConfigurator->startConfiguration(*config);
     if (accepted) {
+      qDebug() << "accepted " << config->name();
       mModules.append(config);
+      auto currIdx = createIndex(mModules.length(), 0);
+      emit dataChanged(currIdx, createIndex(currIdx.row(), 0));
+      return true;
     } else {
       delete config;
     }
   }
+  return false;
 }
 
 Qt::DropActions CorryConfigModel::supportedDropActions() const {
@@ -120,7 +158,7 @@ bool CorryConfigModel::canDropMimeData(const QMimeData *data,
                                        Qt::DropAction action, int row,
                                        int column,
                                        const QModelIndex &parent) const {
-  return true;
+  return canDecodeMime(*data);
 }
 
 Qt::ItemFlags CorryConfigModel::flags(const QModelIndex &index) const {
@@ -176,9 +214,13 @@ ModuleConfiguration CorryConfigModel::moduleDefaultConfig(const QString &name) {
  * for details see
  * https://wiki.python.org/moin/PyQt/Handling%20Qt%27s%20internal%20item%20MIME%20type
  */
-void CorryConfigModel::decodeMimeData(const QByteArray &data,
-                                      QStandardItem &item) {
-  QDataStream ds(data);
+bool CorryConfigModel::decodeMimeData(const QMimeData &data,
+                                      QStandardItem &item) const {
+
+  if (!canDecodeMime(data)) {
+    return false;
+  }
+  QDataStream ds(data.data(acceptableMimeType));
   while (!ds.atEnd()) {
     qint32 row, col, map_items;
     ds >> row;
@@ -193,6 +235,11 @@ void CorryConfigModel::decodeMimeData(const QByteArray &data,
       item.setData(val, role);
     }
   }
+  return true;
+}
+
+bool CorryConfigModel::canDecodeMime(const QMimeData &data) const {
+  return data.hasFormat(acceptableMimeType);
 }
 
 void CorryConfigModel::acceptConfiguredModule() {}

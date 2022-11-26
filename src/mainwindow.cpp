@@ -20,6 +20,17 @@ MainWindow::MainWindow(QWidget *parent)
   ui->lvConfig->setModel((&mConfigModel));
   ui->lvConfig->setDropIndicatorShown(true);
   ui->lvConfig->setAcceptDrops(true);
+
+  mConfigModel.parseAvailableModules("modules.json");
+  mModulesModel.clear();
+  int i = 0;
+  foreach (const auto module, mConfigModel.availableModules()) {
+    auto item = new QStandardItem(module->name());
+    item->setData(module->name(), Qt::DisplayRole);
+    mModulesModel.setItem(i, item);
+    i++;
+  }
+  mModulesModel.sort(0);
 }
 
 MainWindow::~MainWindow() { delete ui; }
@@ -41,10 +52,4 @@ void MainWindow::on_pbLoad_clicked() {
   mModulesModel.sort(0);
 }
 
-void MainWindow::on_pushButton_clicked() {
-  auto idx = mModulesModel.index(0, 0);
-  auto mime = mModulesModel.mimeData(QModelIndexList() << idx);
-  qDebug() << mime->formats() << mime->text();
-  mime->setText("I <3 Noussi");
-  qDebug() << mime->formats() << mime->text();
-}
+void MainWindow::on_pushButton_clicked() { ui->lvConfig->update(); }

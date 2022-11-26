@@ -56,11 +56,14 @@ public:
   auto availableModules() { return mAvailableModules; };
 
 private:
+  const QString acceptableMimeType = "application/x-qstandarditemmodeldatalist";
+
   QList<ModuleConfiguration *> mModules;
   ModuleConfigurator *mConfigurator;
   QList<ModuleConfiguration *> mAvailableModules;
 
-  void decodeMimeData(const QByteArray &data, QStandardItem &item);
+  bool decodeMimeData(const QMimeData &data, QStandardItem &item) const;
+  bool canDecodeMime(const QMimeData &data) const;
 
 private slots:
   void acceptConfiguredModule();

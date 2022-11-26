@@ -47,4 +47,5 @@ void ModuleConfigurator::populateUi(ModuleConfiguration &config) {
     row << unit;
     mParameterModel.appendRow(row);
   }
+  ui->tvParameters->adjustSize();
 }
