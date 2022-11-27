@@ -61,8 +61,18 @@ void MainWindow::exportToCfgClicked() {
   if (file.isEmpty()) {
     return;
   }
+
   if (!mConfigModel.exportToCfg(file)) {
     qWarning() << "Error exporting config to file " << file;
+  }
+
+  // regexp removes file name
+  auto detectorsFile = file.remove(QRegularExpression("[\\w-]+\\..+")) +
+                       mConfigModel.detectorsFile();
+  // extract path from user input
+  if (!mGeometryBuilder.saveToCorryConfig(detectorsFile)) {
+    qWarning() << "Error exporting geometry file "
+               << mConfigModel.detectorsFile();
   }
 }
 
@@ -76,4 +86,4 @@ void MainWindow::on_pbAdd_clicked() {
   }
 }
 
-void MainWindow::on_pbMainConfig_clicked() {}
+void MainWindow::on_pbMainConfig_clicked() { mConfigModel.editGlobalCfg(); }

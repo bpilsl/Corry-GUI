@@ -32,6 +32,8 @@ bool ModuleConfigurator::startConfiguration(ModuleConfiguration &config) {
 
 void ModuleConfigurator::populateUi(ModuleConfiguration &config) {
   setWindowTitle(config.name());
+  ui->cbName->clear();
+  ui->cbType->clear();
   ui->cbName->addItem("");
   ui->cbName->addItems(mAvailableDetectorNames);
   ui->cbType->addItem("");
@@ -53,7 +55,6 @@ void ModuleConfigurator::populateUi(ModuleConfiguration &config) {
     mParameterModel.appendRow(row);
   }
   ui->tvParameters->adjustSize();
-  qDebug() << "nRows = " << mParameterModel.rowCount();
 }
 
 void ModuleConfigurator::on_buttonBox_accepted() {

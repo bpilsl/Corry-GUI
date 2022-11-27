@@ -36,7 +36,7 @@ globalConfig = {"module_name": "Corryvreckan", "parameters": {"log_level": "INFO
                                                           "number_of_events": "-1"
                                                           }}
 out.write(json.dumps(globalConfig))
-out.write('\n\n')
+out.write(',\n\n')
 first = True
 files = glob.glob(os.path.join(directory, '**/*.cpp'))
 for filename in files:

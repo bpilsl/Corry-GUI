@@ -53,9 +53,10 @@ public:
   Qt::ItemFlags flags(const QModelIndex &index) const override;
 
   bool parseAvailableModules(const QString &file);
-  ModuleConfiguration moduleDefaultConfig(const QString &name);
   auto availableModules() { return mAvailableModules; };
   bool exportToCfg(const QString &file);
+  bool editGlobalCfg();
+  QString detectorsFile();
 
 private:
   const QString acceptableMimeType = "application/x-qstandarditemmodeldatalist";
@@ -63,6 +64,7 @@ private:
   QList<ModuleConfiguration *> mModules;
   ModuleConfigurator *mConfigurator;
   QList<ModuleConfiguration *> mAvailableModules;
+  ModuleConfiguration *mGlobalConfig = nullptr;
 
   bool decodeMimeData(const QMimeData &data, QStandardItem &item) const;
   bool canDecodeMime(const QMimeData &data) const;

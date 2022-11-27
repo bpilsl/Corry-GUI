@@ -136,17 +136,14 @@ bool CorryConfigModel::parseAvailableModules(const QString &file) {
       continue;
     }
     auto config = new ModuleConfiguration(module.toObject(), this);
-    mAvailableModules.append(config);
-  }
-  return true;
-}
-
-ModuleConfiguration CorryConfigModel::moduleDefaultConfig(const QString &name) {
-  foreach (auto module, mAvailableModules) {
-    if (module->name() == name) {
-      return *module;
+    if (config->name() == "Corryvreckan") {
+      // global config gets treated seperately
+      mGlobalConfig = config;
+    } else {
+      mAvailableModules.append(config);
     }
   }
+  return true;
 }
 
 bool CorryConfigModel::exportToCfg(const QString &file) {
@@ -160,6 +157,20 @@ bool CorryConfigModel::exportToCfg(const QString &file) {
     out << module->toCorryConfigSection() << "\n\n";
   }
   return true;
+}
+
+bool CorryConfigModel::editGlobalCfg() {
+  if (mGlobalConfig == nullptr) {
+    return false;
+  }
+  return mConfigurator->startConfiguration(*mGlobalConfig);
+}
+
+QString CorryConfigModel::detectorsFile() {
+  if (mGlobalConfig == nullptr) {
+    return QString();
+  }
+  return mGlobalConfig->value("detectors_file").toString();
 }
 /**
  * @brief CorryConfigModel::decodeMimeData decode qt internal MIME data dropped
