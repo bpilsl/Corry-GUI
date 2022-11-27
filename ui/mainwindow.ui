@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabGeo">
        <attribute name="title">
@@ -89,9 +89,9 @@
            </widget>
           </item>
           <item row="0" column="0">
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="pbMainConfig">
             <property name="text">
-             <string>Test</string>
+             <string>Main</string>
             </property>
            </widget>
           </item>

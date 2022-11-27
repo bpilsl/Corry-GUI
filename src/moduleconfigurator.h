@@ -17,14 +17,20 @@ public:
   explicit ModuleConfigurator(QWidget *parent = nullptr);
   ~ModuleConfigurator();
   bool startConfiguration(ModuleConfiguration &config);
+  inline void setAvailableDetectorNames(const QStringList &names) {
+    mAvailableDetectorNames = names;
+  };
+  inline void setAvailableDetectorTypes(const QStringList &types) {
+    mAvailableDetectorTypes = types;
+  };
 
 private slots:
   void on_buttonBox_accepted();
-
   void on_buttonBox_rejected();
 
 private:
   Ui::ModuleConfigurator *ui;
+  QStringList mAvailableDetectorNames, mAvailableDetectorTypes;
   QStandardItemModel mParameterModel;
   ModuleConfiguration *mCurrentModule;
   void populateUi(ModuleConfiguration &config);

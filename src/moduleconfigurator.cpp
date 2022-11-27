@@ -32,6 +32,10 @@ bool ModuleConfigurator::startConfiguration(ModuleConfiguration &config) {
 
 void ModuleConfigurator::populateUi(ModuleConfiguration &config) {
   setWindowTitle(config.name());
+  ui->cbName->addItem("");
+  ui->cbName->addItems(mAvailableDetectorNames);
+  ui->cbType->addItem("");
+  ui->cbType->addItems(mAvailableDetectorTypes);
 
   for (int i = 1; i < mParameterModel.rowCount(); i++) {
     // never remove header, just possible previously added rows

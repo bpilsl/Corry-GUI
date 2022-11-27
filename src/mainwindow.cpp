@@ -56,8 +56,6 @@ void MainWindow::on_pbLoad_clicked() {
   mModulesModel.sort(0);
 }
 
-void MainWindow::on_pushButton_clicked() { ui->lvConfig->update(); }
-
 void MainWindow::exportToCfgClicked() {
   auto file = QFileDialog::getSaveFileName(this, "Export config to");
   if (file.isEmpty()) {
@@ -68,4 +66,14 @@ void MainWindow::exportToCfgClicked() {
   }
 }
 
-void MainWindow::on_pbAdd_clicked() { mGeometryBuilder.exec(); }
+void MainWindow::on_pbAdd_clicked() {
+  auto result = mGeometryBuilder.exec();
+  if (result == QDialog::Accepted) {
+    mModuleConfigurator->setAvailableDetectorNames(
+        mGeometryBuilder.availableDetectorNames());
+    mModuleConfigurator->setAvailableDetectorTypes(
+        mGeometryBuilder.availableDetectorTypes());
+  }
+}
+
+void MainWindow::on_pbMainConfig_clicked() {}
