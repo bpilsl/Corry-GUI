@@ -44,20 +44,41 @@ void GeometryBuilder::paintGeometry() {
       QColor("black"), QColor("red"),    QColor("blue"),
       QColor("green"), QColor("yellow"), QColor("purple"),
       QColor("beige"), QColor("pink"),   QColor("orange")};
+  mScene.clear();
   int maxDim[3] = {0};
+  double maxHeight = 0.0;
   foreach (const auto &detector, mDetectors) {
+    auto height = detector->pitch[0] * double(detector->nmbOfPixels[0]) * 1e-3;
+    if (maxHeight < height) {
+      maxHeight = height;
+    }
     for (int i = 0; i < 3; i++) {
+      qDebug() << "max dim " << i << " " << maxDim[i];
       if (maxDim[i] < detector->position[i]) {
         maxDim[i] = detector->position[i];
       }
     }
   }
-  mScene.setSceneRect(QRectF(0.0, 0.0, maxDim[0], maxDim[1]));
+  mScene.setSceneRect(QRectF(0.0, 0.0, maxDim[0], maxDim[1] + maxHeight));
+
+  /*
+   * we paint in the x-z plane:
+   *
+   * ^x
+   * |
+   * |      z
+   * |______>
+   */
   int i = 0;
   foreach (const auto &detector, mDetectors) {
-    mScene.addRect(QRectF(detector->position[2], detector->position[0], 10,
-                          detector->pitch[0] * detector->nmbOfPixels[0]),
-                   QPen(), QBrush(colorMap[i % colorMap.length()]));
+    // scene x corresponds to our z position and y to our x
+    auto height = detector->pitch[0] * double(detector->nmbOfPixels[0]) /
+                  (mScene.sceneRect().height());
+    qDebug() << "scene = " << mScene.sceneRect().height() << " "
+             << mScene.sceneRect().width();
+    mScene.addRect(
+        QRectF(detector->position[2], (maxHeight - height) / 2.0, 10, height),
+        QPen(), QBrush(colorMap[i % colorMap.length()]));
     i++;
   }
 }
