@@ -31,7 +31,12 @@ public:
   inline auto setValue(const QString &key, const QVariant &val) {
     mParameters[key]->value = val;
   }
-  inline auto value(const QString &key) { return mParameters[key]->value; }
+  inline auto value(const QString &key) {
+    if (mParameters[key]->value.isValid()) {
+      return mParameters[key]->value;
+    }
+    return mParameters[key]->defaultValue;
+  }
   inline auto param2Str(const QString &key) {
     QString out;
     QTextStream ts(&out);

@@ -58,7 +58,7 @@ void MainWindow::on_pbLoad_clicked() {
 void MainWindow::on_pushButton_clicked() { ui->lvConfig->update(); }
 
 void MainWindow::exportToCfgClicked() {
-  auto file = QFileDialog::getOpenFileName(this, "Export config to");
+  auto file = QFileDialog::getSaveFileName(this, "Export config to");
   if (file.isEmpty()) {
     return;
   }

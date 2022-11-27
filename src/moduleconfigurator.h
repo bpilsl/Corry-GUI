@@ -18,10 +18,15 @@ public:
   ~ModuleConfigurator();
   bool startConfiguration(ModuleConfiguration &config);
 
+private slots:
+  void on_buttonBox_accepted();
+
+  void on_buttonBox_rejected();
+
 private:
   Ui::ModuleConfigurator *ui;
   QStandardItemModel mParameterModel;
-
+  ModuleConfiguration *mCurrentModule;
   void populateUi(ModuleConfiguration &config);
 };
 
