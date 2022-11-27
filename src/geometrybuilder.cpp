@@ -1,6 +1,7 @@
 #include "geometrybuilder.h"
 #include "ui_geometrybuilder.h"
 
+#include <QFile>
 #include <QTextStream>
 
 GeometryBuilder::GeometryBuilder(QWidget *parent)
@@ -40,6 +41,7 @@ QStringList GeometryBuilder::availableDetectorTypes() {
 }
 
 void GeometryBuilder::paintGeometry() {
+  const double sensorThickness = 10.0;
   const QList<QColor> colorMap = {
       QColor("black"), QColor("red"),    QColor("blue"),
       QColor("green"), QColor("yellow"), QColor("purple"),
@@ -53,13 +55,12 @@ void GeometryBuilder::paintGeometry() {
       maxHeight = height;
     }
     for (int i = 0; i < 3; i++) {
-      qDebug() << "max dim " << i << " " << maxDim[i];
       if (maxDim[i] < detector->position[i]) {
         maxDim[i] = detector->position[i];
       }
     }
   }
-  mScene.setSceneRect(QRectF(0.0, 0.0, maxDim[0], maxDim[1] + maxHeight));
+  mScene.setSceneRect(QRectF(0.0, 0.0, maxDim[2], maxDim[0] + maxHeight));
 
   /*
    * we paint in the x-z plane:
@@ -74,13 +75,37 @@ void GeometryBuilder::paintGeometry() {
     // scene x corresponds to our z position and y to our x
     auto height = detector->pitch[0] * double(detector->nmbOfPixels[0]) /
                   (mScene.sceneRect().height());
-    qDebug() << "scene = " << mScene.sceneRect().height() << " "
-             << mScene.sceneRect().width();
+    /* height of sensor => dimesion in scene y
+     * position of sensor in z => start in scene x
+     * width = arbitrary sensor thickness
+     * align in x-plane like:
+     *
+     * + height / 2 -----------
+     *
+     * x-pos => 0   -----------
+     *
+     * -height /2   -----------
+     */
+
     mScene.addRect(
-        QRectF(detector->position[2], (maxHeight - height) / 2.0, 10, height),
+        QRectF(detector->position[2],
+               (maxHeight - height + double(detector->position[0])) / 2.0,
+               sensorThickness, height),
         QPen(), QBrush(colorMap[i % colorMap.length()]));
     i++;
   }
+}
+
+bool GeometryBuilder::saveToCorryConfig(const QString &file) {
+  QFile f(file);
+  if (!f.open(QIODevice::WriteOnly)) {
+    return false;
+  }
+  QTextStream out(&f);
+  foreach (const auto &detector, mDetectors) {
+    out << detector->toCorryConfig() << "\n";
+  }
+  return true;
 }
 
 void GeometryBuilder::on_buttonBox_accepted() {

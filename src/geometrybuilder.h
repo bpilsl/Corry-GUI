@@ -44,6 +44,7 @@ public:
   QStringList availableDetectorNames();
   QStringList availableDetectorTypes();
   void paintGeometry();
+  bool saveToCorryConfig(const QString &file);
 
 private slots:
   void on_buttonBox_accepted();
