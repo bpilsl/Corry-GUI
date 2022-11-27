@@ -21,6 +21,9 @@ MainWindow::MainWindow(QWidget *parent)
   ui->lvConfig->setDropIndicatorShown(true);
   ui->lvConfig->setAcceptDrops(true);
 
+  connect(ui->actionExport, &QAction::triggered, this,
+          &MainWindow::exportToCfgClicked);
+
   mConfigModel.parseAvailableModules("modules.json");
   mModulesModel.clear();
   int i = 0;
@@ -53,3 +56,13 @@ void MainWindow::on_pbLoad_clicked() {
 }
 
 void MainWindow::on_pushButton_clicked() { ui->lvConfig->update(); }
+
+void MainWindow::exportToCfgClicked() {
+  auto file = QFileDialog::getOpenFileName(this, "Export config to");
+  if (file.isEmpty()) {
+    return;
+  }
+  if (!mConfigModel.exportToCfg(file)) {
+    qWarning() << "Error exporting config to file " << file;
+  }
+}

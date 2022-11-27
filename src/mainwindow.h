@@ -22,8 +22,8 @@ public:
 
 private slots:
   void on_pbLoad_clicked();
-
   void on_pushButton_clicked();
+  void exportToCfgClicked();
 
 private:
   Ui::MainWindow *ui;

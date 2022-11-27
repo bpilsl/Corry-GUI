@@ -54,7 +54,7 @@ QVariant CorryConfigModel::data(const QModelIndex &index, int role) const {
     //    retval = QVariant(QSize(100, 50));
     //    break;
   }
-  qDebug() << "returning " << retval;
+  //  qDebug() << "returning " << retval;
   return retval;
 }
 
@@ -147,6 +147,22 @@ ModuleConfiguration CorryConfigModel::moduleDefaultConfig(const QString &name) {
       return *module;
     }
   }
+}
+
+bool CorryConfigModel::exportToCfg(const QString &file) {
+  QFile f(file);
+  f.open(QIODevice::WriteOnly);
+  if (!f.isOpen()) {
+    return false;
+  }
+  QTextStream out(&f);
+  foreach (const auto &module, mModules) {
+    out << "\n[" << module->name() << "]\n";
+    foreach (const auto &param, module->parameters()) {
+      out << module->param2Str(param) << "\n";
+    }
+  }
+  return true;
 }
 /**
  * @brief CorryConfigModel::decodeMimeData decode qt internal MIME data dropped

@@ -24,12 +24,21 @@ public:
                       QObject *parent = nullptr);
 
   void initFromJson(const QJsonObject &obj);
-  auto name() const { return mName; };
-  auto defaultValue(const QString &module) const {
-    return mParameters[module]->defaultValue;
+  inline auto name() const { return mName; };
+  inline auto defaultValue(const QString &key) const {
+    return mParameters[key]->defaultValue;
   }
-  auto setValue(const QString &module, const QVariant &val) {
-    mParameters[module]->value = val;
+  inline auto setValue(const QString &key, const QVariant &val) {
+    mParameters[key]->value = val;
+  }
+  inline auto value(const QString &key) { return mParameters[key]->value; }
+  inline auto param2Str(const QString &key) {
+    QString out;
+    QTextStream ts(&out);
+
+    ts << key << " = " << value(key).toString();
+    ts.flush();
+    return out;
   }
   auto parameters() const { return mParameters.keys(); }
 

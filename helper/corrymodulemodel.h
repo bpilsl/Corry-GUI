@@ -55,6 +55,7 @@ public:
   bool parseAvailableModules(const QString &file);
   ModuleConfiguration moduleDefaultConfig(const QString &name);
   auto availableModules() { return mAvailableModules; };
+  bool exportToCfg(const QString &file);
 
 private:
   const QString acceptableMimeType = "application/x-qstandarditemmodeldatalist";
