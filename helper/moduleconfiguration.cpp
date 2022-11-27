@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QJsonObject>
 #include <QJsonValue>
+#include <QTextStream>
 
 ModuleConfiguration::ModuleConfiguration(const QJsonObject &obj,
                                          QObject *parent)
@@ -33,4 +34,15 @@ void ModuleConfiguration::initFromJson(const QJsonObject &obj) {
     auto tmp = new Parameter(value.toVariant());
     mParameters[key] = tmp;
   }
+}
+
+QString ModuleConfiguration::toCorryConfigSection() {
+  QString out;
+  QTextStream cfg(&out);
+  cfg << "[" << mName << "]\n";
+  foreach (const auto &param, mParameters.keys()) {
+    cfg << param2Str(param) << "\n";
+  }
+  cfg.flush();
+  return out;
 }

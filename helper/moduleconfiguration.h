@@ -37,6 +37,14 @@ public:
     }
     return mParameters[key]->defaultValue;
   }
+
+  auto parameters() const { return mParameters.keys(); }
+  QString toCorryConfigSection();
+
+private:
+  QString mName;
+  QMap<QString, Parameter *> mParameters;
+
   inline auto param2Str(const QString &key) {
     QString out;
     QTextStream ts(&out);
@@ -45,11 +53,6 @@ public:
     ts.flush();
     return out;
   }
-  auto parameters() const { return mParameters.keys(); }
-
-private:
-  QString mName;
-  QMap<QString, Parameter *> mParameters;
 };
 
 #endif // MODULECONFIGURATION_H

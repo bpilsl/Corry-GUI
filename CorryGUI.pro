@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui openglwidgets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -9,19 +9,22 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    src/geometrybuilder.cpp \
     helper/moduleconfiguration.cpp \
     helper/corrymodulemodel.cpp \
     src/moduleconfigurator.cpp \
     src/main.cpp \
-    src/mainwindow.cpp
+    src/mainwindow.cpp \
 
 HEADERS += \
+    src/geometrybuilder.h \
     helper/moduleconfiguration.h \
     helper/corrymodulemodel.h \
     src/moduleconfigurator.h \
-    src/mainwindow.h
+    src/mainwindow.h \
 
 FORMS += \
+    ui/geometrybuilder.ui \
     ui/moduleconfigurator.ui \
     ui/mainwindow.ui
 

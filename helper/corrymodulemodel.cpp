@@ -157,10 +157,7 @@ bool CorryConfigModel::exportToCfg(const QString &file) {
   }
   QTextStream out(&f);
   foreach (const auto &module, mModules) {
-    out << "\n[" << module->name() << "]\n";
-    foreach (const auto &param, module->parameters()) {
-      out << module->param2Str(param) << "\n";
-    }
+    out << module->toCorryConfigSection() << "\n\n";
   }
   return true;
 }

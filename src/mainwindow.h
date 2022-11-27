@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "../helper/corrymodulemodel.h"
+#include "geometrybuilder.h"
 #include "moduleconfigurator.h"
 
 #include <QMainWindow>
@@ -25,11 +26,14 @@ private slots:
   void on_pushButton_clicked();
   void exportToCfgClicked();
 
+  void on_pbAdd_clicked();
+
 private:
   Ui::MainWindow *ui;
   ModuleConfigurator *mModuleConfigurator;
 
   QStandardItemModel mModulesModel;
   CorryConfigModel mConfigModel;
+  GeometryBuilder mGeometryBuilder;
 };
 #endif // MAINWINDOW_H

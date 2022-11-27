@@ -13,7 +13,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow),
       mModuleConfigurator(new ModuleConfigurator(this)),
-      mConfigModel(mModuleConfigurator) {
+      mConfigModel(mModuleConfigurator), mGeometryBuilder(this) {
   ui->setupUi(this);
   ui->lvModules->setModel(&mModulesModel);
   ui->lvModules->setDragEnabled(true);
@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
 
   connect(ui->actionExport, &QAction::triggered, this,
           &MainWindow::exportToCfgClicked);
+  ui->gvDetectorSetup->setScene(mGeometryBuilder.scene());
 
   mConfigModel.parseAvailableModules("modules.json");
   mModulesModel.clear();
@@ -66,3 +67,5 @@ void MainWindow::exportToCfgClicked() {
     qWarning() << "Error exporting config to file " << file;
   }
 }
+
+void MainWindow::on_pbAdd_clicked() { mGeometryBuilder.exec(); }
