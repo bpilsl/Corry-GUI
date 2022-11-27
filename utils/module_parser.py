@@ -6,7 +6,6 @@ import glob
 
 
 def parse_module(file_name):
-
     retval = {}
     module_name = re.search(r'\w+(?=\.cpp)', file_name).group(0)
     retval['module_name'] = module_name
@@ -28,6 +27,16 @@ output_file = sys.argv[2]
 out = open(output_file, 'w')
 out.write('[')
 modules = {}
+globalConfig = {"module_name": "Corryvreckan", "parameters": {"log_level": "INFO", "log_format": "",
+                                                          "purge_output_directory": "false",
+                                                          "detectors_file": "detectors.geo",
+                                                          "detectors_file_updated": "detectors_updated.geo",
+                                                          "histogram_file": "out.root",
+                                                          "number_of_tracks": "-1",
+                                                          "number_of_events": "-1"
+                                                          }}
+out.write(json.dumps(globalConfig))
+out.write('\n\n')
 first = True
 files = glob.glob(os.path.join(directory, '**/*.cpp'))
 for filename in files:
@@ -42,4 +51,3 @@ for filename in files:
         out.write(description)
 
 out.write(']')
-
