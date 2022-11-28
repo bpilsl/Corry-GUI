@@ -6,6 +6,7 @@
 #include "moduleconfigurator.h"
 
 #include <QMainWindow>
+#include <QMenu>
 #include <QStandardItemModel>
 
 QT_BEGIN_NAMESPACE
@@ -21,6 +22,8 @@ public:
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
 
+public slots:
+  void customMenuRequested(QPoint pos);
 private slots:
   void on_pbLoad_clicked();
   void exportToCfgClicked();
@@ -36,5 +39,6 @@ private:
   QStandardItemModel mModulesModel;
   CorryConfigModel mConfigModel;
   GeometryBuilder mGeometryBuilder;
+  QMenu mMenuConfigList;
 };
 #endif // MAINWINDOW_H

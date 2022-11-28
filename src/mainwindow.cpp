@@ -3,12 +3,7 @@
 
 #include <QDebug>
 #include <QFileDialog>
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonParseError>
-#include <QJsonValue>
-#include <QRegularExpression>
+#include <QMenu>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow),
@@ -25,6 +20,12 @@ MainWindow::MainWindow(QWidget *parent)
           &MainWindow::exportToCfgClicked);
   ui->gvDetectorSetup->setScene(mGeometryBuilder.scene());
 
+  ui->lvConfig->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(ui->lvConfig, &QListView::customContextMenuRequested, this,
+          &MainWindow::customMenuRequested);
+  auto editAction = new QAction("edit", this);
+  mMenuConfigList.addAction(editAction);
+
   mConfigModel.parseAvailableModules("modules.json");
   mModulesModel.clear();
   int i = 0;
@@ -38,6 +39,11 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 MainWindow::~MainWindow() { delete ui; }
+
+void MainWindow::customMenuRequested(QPoint pos) {
+  QModelIndex index = ui->lvConfig->indexAt(pos);
+  mMenuConfigList.popup(ui->lvConfig->viewport()->mapToGlobal(pos));
+}
 
 void MainWindow::on_pbLoad_clicked() {
   auto file = QFileDialog::getOpenFileName(this);
