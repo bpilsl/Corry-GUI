@@ -12,9 +12,9 @@ ModuleConfiguration::ModuleConfiguration(const QJsonObject &obj,
 }
 
 ModuleConfiguration::ModuleConfiguration(const ModuleConfiguration &other,
-                                         QObject *parent) {
+                                         QObject *parent)
+    : QObject(parent) {
   mName = other.name();
-  this->setParent(parent);
   foreach (const auto key, other.mParameters.keys()) {
     mParameters[key] = new Parameter(*other.mParameters[key]);
   }

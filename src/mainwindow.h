@@ -22,15 +22,13 @@ public:
   MainWindow(QWidget *parent = nullptr);
   ~MainWindow();
 
-public slots:
-  void customMenuRequested(QPoint pos);
 private slots:
   void on_pbLoad_clicked();
   void exportToCfgClicked();
-
   void on_pbAdd_clicked();
-
   void on_pbMainConfig_clicked();
+  void editModuleConfig();
+  void customMenuRequested(QPoint pos);
 
 private:
   Ui::MainWindow *ui;
@@ -40,5 +38,6 @@ private:
   CorryConfigModel mConfigModel;
   GeometryBuilder mGeometryBuilder;
   QMenu mMenuConfigList;
+  QModelIndex mSelectedModule;
 };
 #endif // MAINWINDOW_H

@@ -29,6 +29,11 @@ public:
     return mParameters[key]->defaultValue;
   }
   inline auto setValue(const QString &key, const QVariant &val) {
+    if (!mParameters.contains(key)) {
+      qWarning() << "trying to set key " << key << " for module " << mName
+                 << " which is not available!";
+      return;
+    }
     mParameters[key]->value = val;
   }
   inline auto value(const QString &key) {

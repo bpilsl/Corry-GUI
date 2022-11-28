@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->lvConfig, &QListView::customContextMenuRequested, this,
           &MainWindow::customMenuRequested);
   auto editAction = new QAction("edit", this);
+  connect(editAction, &QAction::triggered, this, &MainWindow::editModuleConfig);
   mMenuConfigList.addAction(editAction);
 
   mConfigModel.parseAvailableModules("modules.json");
@@ -42,6 +43,10 @@ MainWindow::~MainWindow() { delete ui; }
 
 void MainWindow::customMenuRequested(QPoint pos) {
   QModelIndex index = ui->lvConfig->indexAt(pos);
+  if (!index.isValid()) {
+    return;
+  }
+  mSelectedModule = index;
   mMenuConfigList.popup(ui->lvConfig->viewport()->mapToGlobal(pos));
 }
 
@@ -73,7 +78,7 @@ void MainWindow::exportToCfgClicked() {
   }
 
   // regexp removes file name
-  auto detectorsFile = file.remove(QRegularExpression("[\\w-]+\\..+")) +
+  auto detectorsFile = file.remove(QRegularExpression(R"([\w-]+\..+)")) +
                        mConfigModel.detectorsFile();
   // extract path from user input
   if (!mGeometryBuilder.saveToCorryConfig(detectorsFile)) {
@@ -93,3 +98,5 @@ void MainWindow::on_pbAdd_clicked() {
 }
 
 void MainWindow::on_pbMainConfig_clicked() { mConfigModel.editGlobalCfg(); }
+
+void MainWindow::editModuleConfig() { mConfigModel.editItem(mSelectedModule); }

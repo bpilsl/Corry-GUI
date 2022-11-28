@@ -55,6 +55,7 @@ public:
   bool parseAvailableModules(const QString &file);
   auto availableModules() { return mAvailableModules; };
   bool exportToCfg(const QString &file);
+  bool editItem(const QModelIndex &index);
   bool editGlobalCfg();
   QString detectorsFile();
 

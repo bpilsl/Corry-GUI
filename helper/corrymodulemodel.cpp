@@ -61,13 +61,12 @@ QVariant CorryConfigModel::data(const QModelIndex &index, int role) const {
 bool CorryConfigModel::dropMimeData(const QMimeData *data,
                                     Qt::DropAction action, int row, int column,
                                     const QModelIndex &parent) {
-
   if (canDecodeMime(*data)) {
     QStandardItem item;
     if (!decodeMimeData(*data, item)) {
       return false;
     }
-    qDebug() << "dropped item " << item.data(0);
+
     auto chosenModule = item.data(0).toString();
     ModuleConfiguration *config = nullptr;
     foreach (auto module, mAvailableModules) {
@@ -81,7 +80,6 @@ bool CorryConfigModel::dropMimeData(const QMimeData *data,
     }
     auto accepted = mConfigurator->startConfiguration(*config);
     if (accepted) {
-      qDebug() << "accepted " << config->name();
       mModules.append(config);
       auto currIdx = createIndex(mModules.length(), 0);
       emit dataChanged(currIdx, createIndex(currIdx.row(), 0));
@@ -158,6 +156,14 @@ bool CorryConfigModel::exportToCfg(const QString &file) {
     out << module->toCorryConfigSection() << "\n\n";
   }
   return true;
+}
+
+bool CorryConfigModel::editItem(const QModelIndex &index) {
+  if (!index.isValid()) {
+    return false;
+  }
+  auto module = mModules[index.row()];
+  return mConfigurator->startConfiguration(*module);
 }
 
 bool CorryConfigModel::editGlobalCfg() {

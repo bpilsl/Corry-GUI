@@ -39,16 +39,13 @@ void ModuleConfigurator::populateUi(ModuleConfiguration &config) {
   ui->cbType->addItem("");
   ui->cbType->addItems(mAvailableDetectorTypes);
 
-  for (int i = 1; i < mParameterModel.rowCount(); i++) {
-    // never remove header, just possible previously added rows
-    mParameterModel.removeRow(i);
-  }
+  mParameterModel.removeRows(0, mParameterModel.rowCount());
 
   foreach (const auto &param, config.parameters()) {
     QList<QStandardItem *> row;
     row.append(new QStandardItem(param));
     auto defaultVal = new QStandardItem();
-    defaultVal->setData(config.defaultValue(param), Qt::EditRole);
+    defaultVal->setData(config.value(param), Qt::EditRole);
     row << defaultVal;
     auto unit = new QStandardItem("test");
     row << unit;
@@ -58,8 +55,6 @@ void ModuleConfigurator::populateUi(ModuleConfiguration &config) {
 }
 
 void ModuleConfigurator::on_buttonBox_accepted() {
-  qDebug() << "nRows = " << mParameterModel.rowCount() << " column"
-           << mParameterModel.columnCount();
   for (int row = 0; row < mParameterModel.rowCount(); row++) {
     QString name;
     QVariant value;
@@ -73,12 +68,11 @@ void ModuleConfigurator::on_buttonBox_accepted() {
     const auto valueItem = mParameterModel.item(row, 1);
     if (valueItem) {
       value = valueItem->data(Qt::DisplayRole);
+      mCurrentModule->setValue(name, value);
     } else {
       qWarning() << QString("empty item at %1:%2").arg(row).arg(1);
     }
-    mCurrentModule->setValue(name, value);
   }
-  mParameterModel.clear();
 }
 
-void ModuleConfigurator::on_buttonBox_rejected() { mParameterModel.clear(); }
+void ModuleConfigurator::on_buttonBox_rejected() {}
