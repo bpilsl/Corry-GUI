@@ -28,7 +28,10 @@ private slots:
   void on_pbAdd_clicked();
   void on_pbMainConfig_clicked();
   void editModuleConfig();
-  void customMenuRequested(QPoint pos);
+  void editGeoConfig();
+  void customMenuRequestedModuleConfig(const QPoint &pos);
+  void customMenuRequestedGeometry(const QPoint &pos);
+  void fitSceneToGv();
 
 private:
   Ui::MainWindow *ui;
@@ -37,7 +40,8 @@ private:
   QStandardItemModel mModulesModel;
   CorryConfigModel mConfigModel;
   GeometryBuilder mGeometryBuilder;
-  QMenu mMenuConfigList;
+  QMenu mMenuConfigList, mMenuGeo;
   QModelIndex mSelectedModule;
+  GeometryBuilder::Detector *mSelectedDetector;
 };
 #endif // MAINWINDOW_H

@@ -3,6 +3,7 @@
 
 #include <QDebug>
 #include <QFileDialog>
+#include <QGraphicsItem>
 #include <QMenu>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -22,10 +23,21 @@ MainWindow::MainWindow(QWidget *parent)
 
   ui->lvConfig->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(ui->lvConfig, &QListView::customContextMenuRequested, this,
-          &MainWindow::customMenuRequested);
-  auto editAction = new QAction("edit", this);
-  connect(editAction, &QAction::triggered, this, &MainWindow::editModuleConfig);
-  mMenuConfigList.addAction(editAction);
+          &MainWindow::customMenuRequestedModuleConfig);
+  ui->gvDetectorSetup->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(ui->gvDetectorSetup, &QGraphicsView::customContextMenuRequested, this,
+          &MainWindow::customMenuRequestedGeometry);
+  auto editActionModuleConfig = new QAction("edit", this);
+  connect(editActionModuleConfig, &QAction::triggered, this,
+          &MainWindow::editModuleConfig);
+  mMenuConfigList.addAction(editActionModuleConfig);
+  auto editActionGeoDetector = new QAction("edit", this);
+  connect(editActionGeoDetector, &QAction::triggered, this,
+          &MainWindow::editGeoConfig);
+  mMenuGeo.addAction(editActionGeoDetector);
+
+  connect(&mGeometryBuilder, &GeometryBuilder::repainted, this,
+          &MainWindow::fitSceneToGv);
 
   mConfigModel.parseAvailableModules("modules.json");
   mModulesModel.clear();
@@ -41,13 +53,27 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() { delete ui; }
 
-void MainWindow::customMenuRequested(QPoint pos) {
+void MainWindow::customMenuRequestedModuleConfig(const QPoint &pos) {
   QModelIndex index = ui->lvConfig->indexAt(pos);
   if (!index.isValid()) {
     return;
   }
   mSelectedModule = index;
   mMenuConfigList.popup(ui->lvConfig->viewport()->mapToGlobal(pos));
+}
+
+void MainWindow::customMenuRequestedGeometry(const QPoint &pos) {
+  auto mapped = ui->gvDetectorSetup->mapToScene(pos);
+  mSelectedDetector = mGeometryBuilder.detectorAtPos(mapped);
+  if (mSelectedDetector == nullptr) {
+    return;
+  }
+  mMenuGeo.popup(ui->gvDetectorSetup->viewport()->mapToGlobal(pos));
+}
+
+void MainWindow::fitSceneToGv() {
+  ui->gvDetectorSetup->fitInView(mGeometryBuilder.scene()->sceneRect(),
+                                 Qt::KeepAspectRatio);
 }
 
 void MainWindow::on_pbLoad_clicked() {
@@ -100,3 +126,7 @@ void MainWindow::on_pbAdd_clicked() {
 void MainWindow::on_pbMainConfig_clicked() { mConfigModel.editGlobalCfg(); }
 
 void MainWindow::editModuleConfig() { mConfigModel.editItem(mSelectedModule); }
+
+void MainWindow::editGeoConfig() {
+  mGeometryBuilder.configureDetector(mSelectedDetector);
+}
