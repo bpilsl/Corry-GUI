@@ -39,6 +39,9 @@ void ModuleConfigurator::populateUi(ModuleConfiguration &config) {
   ui->cbType->addItem("");
   ui->cbType->addItems(mAvailableDetectorTypes);
 
+  ui->cbName->setCurrentText(config.detectorName());
+  ui->cbType->setCurrentText(config.detectorType());
+
   mParameterModel.removeRows(0, mParameterModel.rowCount());
 
   foreach (const auto &param, config.parameters()) {
@@ -55,6 +58,8 @@ void ModuleConfigurator::populateUi(ModuleConfiguration &config) {
 }
 
 void ModuleConfigurator::on_buttonBox_accepted() {
+  mCurrentModule->setDetectorName(ui->cbName->currentText());
+  mCurrentModule->setDetectorType(ui->cbType->currentText());
   for (int row = 0; row < mParameterModel.rowCount(); row++) {
     QString name;
     QVariant value;

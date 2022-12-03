@@ -36,6 +36,11 @@ public:
     }
     mParameters[key]->value = val;
   }
+
+  inline auto setDetectorName(const QString &name) { mDetectorName = name; }
+  inline auto setDetectorType(const QString &type) { mDetectorType = type; }
+  inline auto detectorName() { return mDetectorName; }
+  inline auto detectorType() { return mDetectorType; }
   inline auto value(const QString &key) {
     if (mParameters[key]->value.isValid()) {
       return mParameters[key]->value;
@@ -46,8 +51,11 @@ public:
   auto parameters() const { return mParameters.keys(); }
   QString toCorryConfigSection();
 
+  const QString &detectorType() const;
+
 private:
   QString mName;
+  QString mDetectorName, mDetectorType;
   QMap<QString, Parameter *> mParameters;
 
   inline auto param2Str(const QString &key) {

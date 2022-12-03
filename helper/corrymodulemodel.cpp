@@ -33,7 +33,10 @@ QVariant CorryConfigModel::data(const QModelIndex &index, int role) const {
 
   switch (role) {
   case Qt::DisplayRole:
-    retval = QVariant(mModules[index.row()]->name());
+    auto module = mModules[index.row()];
+    retval = QString("%1  %2:%3")
+                 .arg(module->name(), module->detectorType(),
+                      module->detectorName());
     break;
     //  case Qt::DecorationRole:
     //    retval = QVariant(QColor("red"));
