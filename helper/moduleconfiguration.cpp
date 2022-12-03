@@ -40,6 +40,12 @@ QString ModuleConfiguration::toCorryConfigSection() {
   QString out;
   QTextStream cfg(&out);
   cfg << "[" << mName << "]\n";
+  if (!mDetectorName.isEmpty()) {
+    cfg << "name = " << mDetectorName << "\n";
+  }
+  if (!mDetectorType.isEmpty()) {
+    cfg << "type = " << mDetectorType << "\n";
+  }
   foreach (const auto &param, mParameters.keys()) {
     cfg << param2Str(param) << "\n";
   }

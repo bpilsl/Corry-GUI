@@ -123,7 +123,9 @@ QString GeometryBuilder::Detector::toCorryConfig() {
   QString out;
   QTextStream cfg(&out);
   cfg << "[" << name << "]\n";
-  cfg << "role = " << role << "\n";
+  if (!role.isEmpty()) {
+    cfg << "role = " << role << "\n";
+  }
   cfg << "type = " << type << "\n";
   cfg << "pixel_pitch = " << pitch[0] << "um, " << pitch[1] << "um\n";
   cfg << "position = " << position[0] << "mm, " << position[1] << "mm, "
