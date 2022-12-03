@@ -15,8 +15,13 @@ class ModuleConfiguration : public QObject {
 public:
   struct Parameter {
     QVariant value, defaultValue;
+    QString unit;
 
     Parameter(const QVariant &defaultVal) { defaultValue = defaultVal; }
+    Parameter(const QVariant &defaultVal, const QString &unit) {
+      defaultValue = defaultVal;
+      this->unit = unit;
+    }
   };
 
   ModuleConfiguration(const QJsonObject &obj, QObject *parent = nullptr);
@@ -36,6 +41,14 @@ public:
     }
     mParameters[key]->value = val;
   }
+  inline auto setUnit(const QString &key, const QString &unit) {
+    if (!mParameters.contains(key)) {
+      qWarning() << "trying to set key " << key << " for module " << mName
+                 << " which is not available!";
+      return;
+    }
+    mParameters[key]->unit = unit;
+  }
 
   inline auto setDetectorName(const QString &name) { mDetectorName = name; }
   inline auto setDetectorType(const QString &type) { mDetectorType = type; }
@@ -47,6 +60,7 @@ public:
     }
     return mParameters[key]->defaultValue;
   }
+  inline auto unit(const QString &key) { return mParameters[key]->unit; }
 
   auto parameters() const { return mParameters.keys(); }
   QString toCorryConfigSection();
@@ -62,7 +76,11 @@ private:
     QString out;
     QTextStream ts(&out);
 
-    ts << key << " = " << value(key).toString();
+    if (unit(key).isEmpty()) {
+      ts << key << " = " << value(key).toString();
+    } else {
+      ts << key << " = " << value(key).toString() << unit(key);
+    }
     ts.flush();
     return out;
   }

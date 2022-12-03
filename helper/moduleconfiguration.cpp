@@ -28,10 +28,20 @@ void ModuleConfiguration::initFromJson(const QJsonObject &obj) {
   if (!params.isObject()) {
     qWarning() << "json parameters key is no object";
   }
+  Parameter *tmp;
   auto paraObj = params.toObject();
   for (const auto &key : paraObj.keys()) {
-    auto value = paraObj[key];
-    auto tmp = new Parameter(value.toVariant());
+    auto defaultValue = paraObj[key];
+    if (defaultValue.isObject()) {
+      auto valWithUnit = defaultValue.toObject();
+      tmp = new Parameter(valWithUnit["value"].toVariant(),
+                          valWithUnit["unit"].toString());
+      qDebug() << "parameter with unit: " << key
+               << " val = " << valWithUnit["value"].toVariant()
+               << " unit = " << valWithUnit["unit"].toString();
+    } else {
+      tmp = new Parameter(defaultValue.toVariant());
+    }
     mParameters[key] = tmp;
   }
 }

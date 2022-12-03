@@ -50,7 +50,8 @@ void ModuleConfigurator::populateUi(ModuleConfiguration &config) {
     auto defaultVal = new QStandardItem();
     defaultVal->setData(config.value(param), Qt::EditRole);
     row << defaultVal;
-    auto unit = new QStandardItem("test");
+    auto unit = new QStandardItem();
+    unit->setData(config.unit(param), Qt::EditRole);
     row << unit;
     mParameterModel.appendRow(row);
   }
@@ -61,7 +62,7 @@ void ModuleConfigurator::on_buttonBox_accepted() {
   mCurrentModule->setDetectorName(ui->cbName->currentText());
   mCurrentModule->setDetectorType(ui->cbType->currentText());
   for (int row = 0; row < mParameterModel.rowCount(); row++) {
-    QString name;
+    QString name, unit;
     QVariant value;
     const auto nameItem = mParameterModel.item(row, 0);
     if (nameItem) {
@@ -76,6 +77,11 @@ void ModuleConfigurator::on_buttonBox_accepted() {
       mCurrentModule->setValue(name, value);
     } else {
       qWarning() << QString("empty item at %1:%2").arg(row).arg(1);
+    }
+    const auto unitItem = mParameterModel.item(row, 2);
+    if (unitItem) {
+      unit = unitItem->data(Qt::DisplayRole).toString();
+      mCurrentModule->setUnit(name, unit);
     }
   }
 }

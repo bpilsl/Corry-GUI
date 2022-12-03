@@ -16,7 +16,11 @@ def parse_module(file_name):
         if match_default:
             key = match_default.group(1)
             default_val = match_default.group(2)
-            params[key] = default_val
+            match_unit = re.search(r'Unit.+\((.+),.*"(.+)"', default_val)
+            if match_unit:
+                params[key] = {'value': match_unit.group(1), 'unit': match_unit.group(2)}
+            else:
+                params[key] = default_val
             # there are config keys without default values
             # we also need to capture those
             # defaulted parameters have priority though
