@@ -12,7 +12,7 @@ def parse_module(file_name):
     params = {}
     f = open(file_name, 'r')
     for line in f:
-        match_default = re.search(r'config_.setDefault.+"(.+)"\w*,\w*(.+(?=\)))', line)
+        match_default = re.search(r'config_.setDefault.+"(.+)"\s*,\s*(.+(?=\)))', line)
         if match_default:
             key = match_default.group(1)
             default_val = match_default.group(2)

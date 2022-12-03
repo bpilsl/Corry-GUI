@@ -12,6 +12,8 @@ ModuleConfigurator::ModuleConfigurator(QWidget *parent)
   mParameterModel.setHorizontalHeaderItem(1, new QStandardItem("Value"));
   mParameterModel.setHorizontalHeaderItem(2, new QStandardItem("Unit"));
   ui->tvParameters->setModel(&mParameterModel);
+  connect(&mParameterModel, &QStandardItemModel::itemChanged, this,
+          &ModuleConfigurator::markNonDefault);
 }
 
 ModuleConfigurator::~ModuleConfigurator() { delete ui; }
@@ -47,15 +49,18 @@ void ModuleConfigurator::populateUi(ModuleConfiguration &config) {
   foreach (const auto &param, config.parameters()) {
     QList<QStandardItem *> row;
     row.append(new QStandardItem(param));
-    auto defaultVal = new QStandardItem();
+    auto value = new QStandardItem();
     bool ok;
     auto nmb = config.value(param).toDouble(&ok);
     if (ok) {
-      defaultVal->setData(nmb, Qt::EditRole);
+      value->setData(nmb, Qt::EditRole);
     } else {
-      defaultVal->setData(config.value(param), Qt::EditRole);
+      value->setData(config.value(param), Qt::EditRole);
     }
-    row << defaultVal;
+    if (value->data(Qt::EditRole) != config.defaultValue(param)) {
+      value->setForeground(QBrush(Qt::red));
+    }
+    row << value;
     auto unit = new QStandardItem();
     unit->setData(config.unit(param), Qt::EditRole);
     row << unit;
@@ -93,3 +98,18 @@ void ModuleConfigurator::on_buttonBox_accepted() {
 }
 
 void ModuleConfigurator::on_buttonBox_rejected() {}
+
+void ModuleConfigurator::markNonDefault(QStandardItem *item) {
+  auto idx = item->index();
+  if (idx.column() == 1) {
+    auto data = item->data(Qt::EditRole);
+    auto defaultVal = mCurrentModule->defaultValue(
+        mParameterModel.item(idx.row(), 0)->data(Qt::DisplayRole).toString());
+    if (data != defaultVal) {
+      item->setForeground(QBrush(Qt::blue));
+    } else {
+      auto defaultBrush = qApp->palette().windowText();
+      item->setForeground(defaultBrush);
+    }
+  }
+}

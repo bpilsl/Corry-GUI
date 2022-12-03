@@ -36,9 +36,6 @@ void ModuleConfiguration::initFromJson(const QJsonObject &obj) {
       auto valWithUnit = defaultValue.toObject();
       tmp = new Parameter(valWithUnit["value"].toVariant(),
                           valWithUnit["unit"].toString());
-      qDebug() << "parameter with unit: " << key
-               << " val = " << valWithUnit["value"].toVariant()
-               << " unit = " << valWithUnit["unit"].toString();
     } else {
       tmp = new Parameter(defaultValue.toVariant());
     }

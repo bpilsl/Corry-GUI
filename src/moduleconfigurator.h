@@ -27,6 +27,7 @@ public:
 private slots:
   void on_buttonBox_accepted();
   void on_buttonBox_rejected();
+  void markNonDefault(QStandardItem *item);
 
 private:
   Ui::ModuleConfigurator *ui;
