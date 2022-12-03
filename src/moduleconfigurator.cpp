@@ -48,7 +48,13 @@ void ModuleConfigurator::populateUi(ModuleConfiguration &config) {
     QList<QStandardItem *> row;
     row.append(new QStandardItem(param));
     auto defaultVal = new QStandardItem();
-    defaultVal->setData(config.value(param), Qt::EditRole);
+    bool ok;
+    auto nmb = config.value(param).toDouble(&ok);
+    if (ok) {
+      defaultVal->setData(nmb, Qt::EditRole);
+    } else {
+      defaultVal->setData(config.value(param), Qt::EditRole);
+    }
     row << defaultVal;
     auto unit = new QStandardItem();
     unit->setData(config.unit(param), Qt::EditRole);
