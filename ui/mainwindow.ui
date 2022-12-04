@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tabGeo">
        <attribute name="title">
@@ -99,7 +99,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tabRun">
+      <widget class="RunManager" name="tabRun">
        <attribute name="title">
         <string>Run</string>
        </attribute>
@@ -155,6 +155,14 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>RunManager</class>
+   <extends>QWidget</extends>
+   <header>src/runmanager.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

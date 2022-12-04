@@ -15,6 +15,7 @@ SOURCES += \
     src/moduleconfigurator.cpp \
     src/main.cpp \
     src/mainwindow.cpp \
+    src/runmanager.cpp
 
 HEADERS += \
     src/geometrybuilder.h \
@@ -22,8 +23,10 @@ HEADERS += \
     helper/corrymodulemodel.h \
     src/moduleconfigurator.h \
     src/mainwindow.h \
+    src/runmanager.h
 
 FORMS += \
+    ui/runmanager.ui \
     ui/geometrybuilder.ui \
     ui/moduleconfigurator.ui \
     ui/mainwindow.ui
