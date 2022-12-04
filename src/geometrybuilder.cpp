@@ -89,6 +89,14 @@ void GeometryBuilder::paintGeometry() {
      */
     auto rect = mScene.addRect(detector->grahicsRect, QPen(),
                                QBrush(colorMap[i % colorMap.length()]));
+    auto label = detector->name + ":\n" + detector->type;
+    QFont font;
+    // TODO: scale fontsize properly to scene contents (is either too big or too
+    // small atm)
+    font.setPointSize(2);
+    auto text = mScene.addSimpleText(label, font);
+    text->setPos(QPoint(detector->grahicsRect.left() - 8,
+                        detector->grahicsRect.top() - 5));
     rect->setData(0, detector->name);
     i++;
   }
