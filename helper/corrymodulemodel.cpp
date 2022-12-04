@@ -92,6 +92,9 @@ bool CorryConfigModel::dropMimeData(const QMimeData *data,
       mModules.append(config);
       auto currIdx = createIndex(mModules.length(), 0);
       emit dataChanged(currIdx, createIndex(currIdx.row(), 0));
+      if (config->isEventLoader()) {
+        emit eventLoadersChanged(eventLoaders());
+      }
       return true;
     } else {
       delete config;
@@ -126,6 +129,7 @@ bool CorryConfigModel::removeRows(int row, int count,
   qDebug() << "removing r = " << row << " n = " << count;
   mModules.remove(row, count);
   endRemoveRows();
+  emit eventLoadersChanged(eventLoaders());
   return true;
 }
 
@@ -205,6 +209,16 @@ QString CorryConfigModel::detectorsFile() {
     return QString();
   }
   return mGlobalConfig->value("detectors_file").toString();
+}
+
+QList<const ModuleConfiguration *> CorryConfigModel::eventLoaders() {
+  QList<const ModuleConfiguration *> retval;
+  foreach (auto module, mModules) {
+    if (module->isEventLoader()) {
+      retval.append(module);
+    }
+  }
+  return retval;
 }
 /**
  * @brief CorryConfigModel::decodeMimeData decode qt internal MIME data dropped

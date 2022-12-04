@@ -103,11 +103,6 @@
        <attribute name="title">
         <string>Run</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_5">
-        <item row="0" column="0">
-         <layout class="QGridLayout" name="gridLayout_4"/>
-        </item>
-       </layout>
       </widget>
      </widget>
     </item>

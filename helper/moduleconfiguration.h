@@ -52,20 +52,19 @@ public:
 
   inline auto setDetectorName(const QString &name) { mDetectorName = name; }
   inline auto setDetectorType(const QString &type) { mDetectorType = type; }
-  inline auto detectorName() { return mDetectorName; }
-  inline auto detectorType() { return mDetectorType; }
+  inline auto detectorName() const { return mDetectorName; }
+  inline auto detectorType() const { return mDetectorType; }
   inline auto value(const QString &key) {
     if (mParameters[key]->value.isValid()) {
       return mParameters[key]->value;
     }
     return mParameters[key]->defaultValue;
   }
-  inline auto unit(const QString &key) { return mParameters[key]->unit; }
+  inline auto unit(const QString &key) const { return mParameters[key]->unit; }
+  inline auto isEventLoader() const { return mName.startsWith("EventLoader"); }
 
   auto parameters() const { return mParameters.keys(); }
   QString toCorryConfigSection();
-
-  const QString &detectorType() const;
 
 private:
   QString mName;

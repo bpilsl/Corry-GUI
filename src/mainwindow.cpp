@@ -49,6 +49,9 @@ MainWindow::MainWindow(QWidget *parent)
   connect(&mGeometryBuilder, &GeometryBuilder::repainted, this,
           &MainWindow::fitSceneToGv);
 
+  connect(ui->tabRun, &RunManager::updateEventLoaders, &mConfigModel,
+          &CorryConfigModel::eventLoadersChanged);
+
   mConfigModel.parseAvailableModules("modules.json");
   mModulesModel.clear();
   int i = 0;
