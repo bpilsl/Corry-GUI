@@ -95,8 +95,8 @@ void GeometryBuilder::paintGeometry() {
     // small atm)
     font.setPointSize(2);
     auto text = mScene.addSimpleText(label, font);
-    text->setPos(QPoint(detector->grahicsRect.left() - 8,
-                        detector->grahicsRect.top() - 5));
+    text->setPos(
+        QPoint(detector->grahicsRect.left(), detector->grahicsRect.top() - 8));
     rect->setData(0, detector->name);
     i++;
   }
