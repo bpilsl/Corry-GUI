@@ -56,6 +56,7 @@ public:
   bool saveToCorryConfig(const QString &file);
   Detector *detectorAtPos(const QPointF &pos);
   void configureDetector(Detector *det);
+  void deleteDetector(Detector *det);
   Detector *mDetector2Edit = nullptr;
 
 signals:

@@ -32,6 +32,8 @@ private slots:
   void customMenuRequestedModuleConfig(const QPoint &pos);
   void customMenuRequestedGeometry(const QPoint &pos);
   void fitSceneToGv();
+  void deleteModule();
+  void deleteDetector();
 
 private:
   Ui::MainWindow *ui;

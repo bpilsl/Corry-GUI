@@ -111,6 +111,24 @@ bool CorryConfigModel::canDropMimeData(const QMimeData *data,
   return canDecodeMime(*data);
 }
 
+bool CorryConfigModel::removeRows(int row, int count,
+                                  const QModelIndex &parent) {
+  qDebug() << "entered remove rows";
+  if (row + count > mModules.length()) {
+    return false;
+  }
+  beginRemoveRows(parent, row, row + count);
+
+  for (int i = row; i < row + count; i++) {
+    delete mModules[i];
+  }
+
+  qDebug() << "removing r = " << row << " n = " << count;
+  mModules.remove(row, count);
+  endRemoveRows();
+  return true;
+}
+
 Qt::ItemFlags CorryConfigModel::flags(const QModelIndex &index) const {
   auto defaultFlags =
       Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled;

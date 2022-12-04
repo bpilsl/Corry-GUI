@@ -151,6 +151,12 @@ void GeometryBuilder::configureDetector(Detector *det) {
   mDetector2Edit = nullptr;
 }
 
+void GeometryBuilder::deleteDetector(Detector *det) {
+  mDetectors.removeAll(det);
+  delete det;
+  paintGeometry();
+}
+
 void GeometryBuilder::alignDetectors() {
   double maxHeight = 0.0;
   foreach (const auto &det, mDetectors) {

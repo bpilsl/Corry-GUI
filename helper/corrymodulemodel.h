@@ -49,6 +49,8 @@ public:
   Qt::DropActions supportedDropActions() const override;
   bool canDropMimeData(const QMimeData *data, Qt::DropAction action, int row,
                        int column, const QModelIndex &parent) const override;
+  bool removeRows(int row, int count,
+                  const QModelIndex &parent = QModelIndex()) override;
 
   Qt::ItemFlags flags(const QModelIndex &index) const override;
 

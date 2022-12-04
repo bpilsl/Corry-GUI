@@ -31,10 +31,20 @@ MainWindow::MainWindow(QWidget *parent)
   connect(editActionModuleConfig, &QAction::triggered, this,
           &MainWindow::editModuleConfig);
   mMenuConfigList.addAction(editActionModuleConfig);
+  auto deleteActionModuleConfig = new QAction("delete", this);
+  connect(deleteActionModuleConfig, &QAction::triggered, this,
+          &MainWindow::deleteModule);
+  mMenuConfigList.addAction(deleteActionModuleConfig);
+
   auto editActionGeoDetector = new QAction("edit", this);
   connect(editActionGeoDetector, &QAction::triggered, this,
           &MainWindow::editGeoConfig);
   mMenuGeo.addAction(editActionGeoDetector);
+
+  auto deleteActionDetector = new QAction("delete", this);
+  connect(deleteActionDetector, &QAction::triggered, this,
+          &MainWindow::deleteDetector);
+  mMenuGeo.addAction(deleteActionDetector);
 
   connect(&mGeometryBuilder, &GeometryBuilder::repainted, this,
           &MainWindow::fitSceneToGv);
@@ -74,6 +84,14 @@ void MainWindow::customMenuRequestedGeometry(const QPoint &pos) {
 void MainWindow::fitSceneToGv() {
   ui->gvDetectorSetup->fitInView(mGeometryBuilder.scene()->sceneRect(),
                                  Qt::KeepAspectRatio);
+}
+
+void MainWindow::deleteModule() {
+  mConfigModel.removeRow(mSelectedModule.row());
+}
+
+void MainWindow::deleteDetector() {
+  mGeometryBuilder.deleteDetector(mSelectedDetector);
 }
 
 void MainWindow::on_pbLoad_clicked() {
