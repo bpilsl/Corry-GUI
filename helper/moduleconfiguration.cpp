@@ -54,8 +54,24 @@ QString ModuleConfiguration::toCorryConfigSection() {
     cfg << "type = " << mDetectorType << "\n";
   }
   foreach (const auto &param, mParameters.keys()) {
-    cfg << param2Str(param) << "\n";
+    // only print non default values
+    if (!mParameters[param]->isDefault()) {
+      cfg << param2Str(param) << "\n";
+    }
   }
   cfg.flush();
+  return out;
+}
+
+QString ModuleConfiguration::param2Str(const QString &key) {
+  QString out;
+  QTextStream ts(&out);
+
+  if (unit(key).isEmpty()) {
+    ts << key << " = " << value(key).toString();
+  } else {
+    ts << key << " = " << value(key).toString() << unit(key);
+  }
+  ts.flush();
   return out;
 }

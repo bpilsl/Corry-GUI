@@ -22,6 +22,7 @@ public:
       defaultValue = defaultVal;
       this->unit = unit;
     }
+    auto isDefault() { return value == defaultValue; }
   };
 
   ModuleConfiguration(const QJsonObject &obj, QObject *parent = nullptr);
@@ -71,18 +72,7 @@ private:
   QString mDetectorName, mDetectorType;
   QMap<QString, Parameter *> mParameters;
 
-  inline auto param2Str(const QString &key) {
-    QString out;
-    QTextStream ts(&out);
-
-    if (unit(key).isEmpty()) {
-      ts << key << " = " << value(key).toString();
-    } else {
-      ts << key << " = " << value(key).toString() << unit(key);
-    }
-    ts.flush();
-    return out;
-  }
+  QString param2Str(const QString &key);
 };
 
 #endif // MODULECONFIGURATION_H
