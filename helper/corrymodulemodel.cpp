@@ -189,6 +189,10 @@ bool CorryConfigModel::exportToCfg(const QString &file) {
   return true;
 }
 
+bool CorryConfigModel::import(const QJsonArray &config) {
+  qDebug() << "model import";
+}
+
 bool CorryConfigModel::editItem(const QModelIndex &index) {
   if (!index.isValid()) {
     return false;

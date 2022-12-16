@@ -157,6 +157,10 @@ void GeometryBuilder::deleteDetector(Detector *det) {
   paintGeometry();
 }
 
+bool GeometryBuilder::import(const QJsonArray &config) {
+  qDebug() << "geo import";
+}
+
 void GeometryBuilder::alignDetectors() {
   double maxHeight = 0.0;
   foreach (const auto &det, mDetectors) {

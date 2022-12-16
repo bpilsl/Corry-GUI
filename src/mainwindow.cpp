@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "../helper/corryconfigparser.h"
 #include "ui_mainwindow.h"
 
 #include <QDebug>
@@ -19,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
 
   connect(ui->actionExport, &QAction::triggered, this,
           &MainWindow::exportToCfgClicked);
+  connect(ui->actionImport, &QAction::triggered, this,
+          &MainWindow::importCfgClicked);
   ui->gvDetectorSetup->setScene(mGeometryBuilder.scene());
 
   ui->lvConfig->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -132,6 +135,17 @@ void MainWindow::exportToCfgClicked() {
     qWarning() << "Error exporting geometry file "
                << mConfigModel.detectorsFile();
   }
+}
+
+void MainWindow::importCfgClicked() {
+  auto file = QFileDialog::getOpenFileName(
+      this, "Import config from (main Corry config, no geo)");
+  if (file.isEmpty()) {
+    return;
+  }
+  auto parser = CorryParser(file, this);
+  mConfigModel.import(parser.modules());
+  mGeometryBuilder.import(parser.geometry());
 }
 
 void MainWindow::on_pbAdd_clicked() {

@@ -25,6 +25,7 @@ public:
 private slots:
   void on_pbLoad_clicked();
   void exportToCfgClicked();
+  void importCfgClicked();
   void on_pbAdd_clicked();
   void on_pbMainConfig_clicked();
   void editModuleConfig();
