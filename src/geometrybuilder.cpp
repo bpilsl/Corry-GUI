@@ -157,7 +157,7 @@ void GeometryBuilder::deleteDetector(Detector *det) {
   paintGeometry();
 }
 
-bool GeometryBuilder::import(const QJsonArray &config) {
+bool GeometryBuilder::import(const QList<Detector> &detectors) {
   qDebug() << "geo import";
 }
 
@@ -212,6 +212,8 @@ QString GeometryBuilder::Detector::toCorryConfig() {
     cfg << "role = " << role << "\n";
   }
   cfg << "type = " << type << "\n";
+  cfg << "number_of_pixels = " << nmbOfPixels[0] << " " << nmbOfPixels[1]
+      << "\n";
   cfg << "pixel_pitch = " << pitch[0] << "um, " << pitch[1] << "um\n";
   cfg << "position = " << position[0] << "mm, " << position[1] << "mm, "
       << position[2] << "mm\n";

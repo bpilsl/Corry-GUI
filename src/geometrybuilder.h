@@ -59,7 +59,7 @@ public:
   void configureDetector(Detector *det);
   void deleteDetector(Detector *det);
   Detector *mDetector2Edit = nullptr;
-  bool import(const QJsonArray &config);
+  bool import(const QList<Detector> &detectors);
 
 signals:
   void repainted();
