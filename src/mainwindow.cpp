@@ -80,7 +80,7 @@ void MainWindow::customMenuRequestedModuleConfig(const QPoint &pos) {
 
 void MainWindow::customMenuRequestedGeometry(const QPoint &pos) {
   auto mapped = ui->gvDetectorSetup->mapToScene(pos);
-  mSelectedDetector = mGeometryBuilder.detectorAtPos(mapped);
+  mSelectedDetector = &mGeometryBuilder.detectorAtPos(mapped);
   if (mSelectedDetector == nullptr) {
     return;
   }
@@ -97,7 +97,7 @@ void MainWindow::deleteModule() {
 }
 
 void MainWindow::deleteDetector() {
-  mGeometryBuilder.deleteDetector(mSelectedDetector);
+  mGeometryBuilder.deleteDetector(*mSelectedDetector);
 }
 
 void MainWindow::on_pbLoad_clicked() {
@@ -145,7 +145,8 @@ void MainWindow::importCfgClicked() {
   }
   auto parser = CorryParser(file, this);
   mConfigModel.import(parser.modules());
-  mGeometryBuilder.import(parser.geometry());
+  auto tmp = parser.detectors();
+  mGeometryBuilder.import(parser.detectors());
 }
 
 void MainWindow::on_pbAdd_clicked() {
@@ -163,5 +164,5 @@ void MainWindow::on_pbMainConfig_clicked() { mConfigModel.editGlobalCfg(); }
 void MainWindow::editModuleConfig() { mConfigModel.editItem(mSelectedModule); }
 
 void MainWindow::editGeoConfig() {
-  mGeometryBuilder.configureDetector(mSelectedDetector);
+  mGeometryBuilder.configureDetector(*mSelectedDetector);
 }

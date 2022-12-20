@@ -19,6 +19,7 @@ public:
     int position[3], orientation[3], nmbOfPixels[2];
     double pitch[2];
     QRectF grahicsRect;
+    bool initialized;
     Detector(const QString &name, const QString &type, const QString &role,
              int pixX, int pixY, double pitchX, double pitchY, int posZ,
              int posX = 0, int posY = 0, int rotZ = 0, int rotX = 0,
@@ -37,14 +38,20 @@ public:
       orientation[1] = rotY;
       orientation[2] = rotZ;
       calcGraphics();
+      initialized = true;
     }
+    Detector() { initialized = false; }
+
     inline void calcGraphics() {
       grahicsRect.setTopLeft(QPoint(position[2], position[0]));
       grahicsRect.setWidth(sensorDrawThickness);
       grahicsRect.setHeight(pitch[0] * double(nmbOfPixels[0]) *
                             1e-3); // convert from um to mm
     }
-    QString toCorryConfig();
+    QString toCorryConfig() const;
+    inline bool operator==(const Detector &other) const {
+      return this->name == other.name && this->type == other.type;
+    }
   };
 
   explicit GeometryBuilder(QWidget *parent = nullptr);
@@ -55,11 +62,11 @@ public:
   QStringList availableDetectorTypes();
   void paintGeometry();
   bool saveToCorryConfig(const QString &file);
-  Detector *detectorAtPos(const QPointF &pos);
-  void configureDetector(Detector *det);
-  void deleteDetector(Detector *det);
+  Detector &detectorAtPos(const QPointF &pos);
+  void configureDetector(Detector &det);
+  void deleteDetector(Detector &det);
   Detector *mDetector2Edit = nullptr;
-  bool import(const QList<Detector> &detectors);
+  void import(const QList<Detector> &detectors);
 
 signals:
   void repainted();
@@ -74,7 +81,7 @@ private:
 
   Ui::GeometryBuilder *ui;
   QGraphicsScene mScene;
-  QList<Detector *> mDetectors;
+  QList<Detector> mDetectors;
 };
 
 #endif // GEOMETRYBUILDERDIALOG_H

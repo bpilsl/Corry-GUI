@@ -14,18 +14,13 @@ GeometryBuilder::GeometryBuilder(QWidget *parent)
   ui->cbRole->addItem("auxiliary");
 }
 
-GeometryBuilder::~GeometryBuilder() {
-  delete ui;
-  foreach (auto detector, mDetectors) {
-    delete detector;
-  }
-}
+GeometryBuilder::~GeometryBuilder() { delete ui; }
 
 QStringList GeometryBuilder::availableDetectorNames() {
   QStringList retval;
   foreach (const auto &detector, mDetectors) {
-    if (!retval.contains(detector->name)) {
-      retval.append(detector->name);
+    if (!retval.contains(detector.name)) {
+      retval.append(detector.name);
     }
   }
   return retval;
@@ -34,8 +29,8 @@ QStringList GeometryBuilder::availableDetectorNames() {
 QStringList GeometryBuilder::availableDetectorTypes() {
   QStringList retval;
   foreach (const auto &detector, mDetectors) {
-    if (!retval.contains(detector->type)) {
-      retval.append(detector->type);
+    if (!retval.contains(detector.type)) {
+      retval.append(detector.type);
     }
   }
   return retval;
@@ -51,13 +46,13 @@ void GeometryBuilder::paintGeometry() {
   int maxDim[3] = {0};
   double maxHeight = 0.0;
   foreach (const auto &detector, mDetectors) {
-    auto height = detector->grahicsRect.height();
+    auto height = detector.grahicsRect.height();
     if (maxHeight < height) {
       maxHeight = height;
     }
     for (int i = 0; i < 3; i++) {
-      if (maxDim[i] < detector->position[i]) {
-        maxDim[i] = detector->position[i];
+      if (maxDim[i] < detector.position[i]) {
+        maxDim[i] = detector.position[i];
       }
     }
   }
@@ -87,17 +82,17 @@ void GeometryBuilder::paintGeometry() {
      *
      * -height /2   -----------
      */
-    auto rect = mScene.addRect(detector->grahicsRect, QPen(),
+    auto rect = mScene.addRect(detector.grahicsRect, QPen(),
                                QBrush(colorMap[i % colorMap.length()]));
-    auto label = detector->name + ":\n" + detector->type;
+    auto label = detector.name + ":\n" + detector.type;
     QFont font;
     // TODO: scale fontsize properly to scene contents (is either too big or too
     // small atm)
     font.setPointSize(2);
     auto text = mScene.addSimpleText(label, font);
     text->setPos(
-        QPoint(detector->grahicsRect.left(), detector->grahicsRect.top() - 8));
-    rect->setData(0, detector->name);
+        QPoint(detector.grahicsRect.left(), detector.grahicsRect.top() - 8));
+    rect->setData(0, detector.name);
     i++;
   }
   emit repainted();
@@ -110,81 +105,85 @@ bool GeometryBuilder::saveToCorryConfig(const QString &file) {
   }
   QTextStream out(&f);
   foreach (const auto &detector, mDetectors) {
-    out << detector->toCorryConfig() << "\n";
+    out << detector.toCorryConfig() << "\n";
   }
   return true;
 }
 
-GeometryBuilder::Detector *GeometryBuilder::detectorAtPos(const QPointF &pos) {
+GeometryBuilder::Detector &GeometryBuilder::detectorAtPos(const QPointF &pos) {
   auto g = mScene.itemAt(pos, QTransform());
   if (g == nullptr) {
-    return nullptr;
+    Detector dummy;
+    return dummy;
   }
   auto name = g->data(0).toString();
 
-  foreach (auto det, mDetectors) {
-    if (det->name == name)
-      return det;
+  for (auto i = mDetectors.begin(); i < mDetectors.end(); i++) {
+    if (i->name == name)
+      return *i;
   }
-  return nullptr;
+  Detector dummy;
+  return dummy;
 }
 
-void GeometryBuilder::configureDetector(Detector *det) {
-  if (det == nullptr) {
+void GeometryBuilder::configureDetector(Detector &det) {
+  if (!det.initialized) {
     return;
   }
-  mDetector2Edit = det;
-  ui->leName->setText(det->name);
-  ui->leType->setText(det->type);
-  ui->cbRole->setCurrentText(det->role);
-  ui->sbPixX->setValue(det->nmbOfPixels[0]);
-  ui->sbPixY->setValue(det->nmbOfPixels[1]);
-  ui->sbPitchX->setValue(det->pitch[0]);
-  ui->sbPitchY->setValue(det->pitch[1]);
-  ui->sbPosX->setValue(det->position[0]);
-  ui->sbPosY->setValue(det->position[1]);
-  ui->sbPosZ->setValue(det->position[2]);
-  ui->sbRotX->setValue(det->orientation[0]);
-  ui->sbRotY->setValue(det->orientation[1]);
-  ui->sbRotZ->setValue(det->orientation[2]);
+  mDetector2Edit = &det;
+  ui->leName->setText(det.name);
+  ui->leType->setText(det.type);
+  ui->cbRole->setCurrentText(det.role);
+  ui->sbPixX->setValue(det.nmbOfPixels[0]);
+  ui->sbPixY->setValue(det.nmbOfPixels[1]);
+  ui->sbPitchX->setValue(det.pitch[0]);
+  ui->sbPitchY->setValue(det.pitch[1]);
+  ui->sbPosX->setValue(det.position[0]);
+  ui->sbPosY->setValue(det.position[1]);
+  ui->sbPosZ->setValue(det.position[2]);
+  ui->sbRotX->setValue(det.orientation[0]);
+  ui->sbRotY->setValue(det.orientation[1]);
+  ui->sbRotZ->setValue(det.orientation[2]);
   this->exec();
   mDetector2Edit = nullptr;
 }
 
-void GeometryBuilder::deleteDetector(Detector *det) {
+void GeometryBuilder::deleteDetector(Detector &det) {
   mDetectors.removeAll(det);
-  delete det;
   paintGeometry();
 }
 
-bool GeometryBuilder::import(const QList<Detector> &detectors) {
-  qDebug() << "geo import";
+void GeometryBuilder::import(const QList<Detector> &detectors) {
+  mDetectors.clear();
+  mDetector2Edit = nullptr;
+
+  mDetectors = detectors;
+  paintGeometry();
 }
 
 void GeometryBuilder::alignDetectors() {
   double maxHeight = 0.0;
   foreach (const auto &det, mDetectors) {
-    if (det->grahicsRect.height() > maxHeight) {
-      maxHeight = det->grahicsRect.height();
+    if (det.grahicsRect.height() > maxHeight) {
+      maxHeight = det.grahicsRect.height();
     }
   }
-  foreach (auto &det, mDetectors) {
-    det->grahicsRect.moveTop(
-        (maxHeight - det->grahicsRect.height() + double(det->position[0])) /
-        2.0);
+  for (auto i = mDetectors.begin(); i < mDetectors.end(); i++) {
+    i->grahicsRect.moveTop(
+        (maxHeight - i->grahicsRect.height() + double(i->position[0])) / 2.0);
   }
 }
 
 void GeometryBuilder::on_buttonBox_accepted() {
   auto detector = mDetector2Edit;
   if (detector == nullptr) {
-    detector = new Detector(
-        ui->leName->text(), ui->leType->text(), ui->cbRole->currentText(),
-        ui->sbPixX->value(), ui->sbPixY->value(), ui->sbPitchX->value(),
-        ui->sbPitchY->value(), ui->sbPosZ->value(), ui->sbPosX->value(),
-        ui->sbPosY->value(), ui->sbRotZ->value(), ui->sbRotX->value(),
-        ui->sbRotY->value());
-    mDetectors.append(detector);
+    Detector d(ui->leName->text(), ui->leType->text(),
+               ui->cbRole->currentText(), ui->sbPixX->value(),
+               ui->sbPixY->value(), ui->sbPitchX->value(),
+               ui->sbPitchY->value(), ui->sbPosZ->value(), ui->sbPosX->value(),
+               ui->sbPosY->value(), ui->sbRotZ->value(), ui->sbRotX->value(),
+               ui->sbRotY->value());
+    mDetectors.append(d);
   } else {
     detector->name = ui->leName->text();
     detector->type = ui->leType->text();
@@ -204,7 +203,7 @@ void GeometryBuilder::on_buttonBox_accepted() {
   paintGeometry();
 }
 
-QString GeometryBuilder::Detector::toCorryConfig() {
+QString GeometryBuilder::Detector::toCorryConfig() const {
   QString out;
   QTextStream cfg(&out);
   cfg << "[" << name << "]\n";

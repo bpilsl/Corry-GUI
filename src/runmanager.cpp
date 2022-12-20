@@ -9,6 +9,10 @@ RunManager::RunManager(QWidget *parent)
   ui->setupUi(this);
   connect(&mCorry, &QProcess::readyReadStandardOutput, this,
           &RunManager::processCorryOutput);
+  connect(&mCorry, &QProcess::readyReadStandardError, this,
+          &RunManager::processCorryOutput);
+
+  configure();
 }
 
 RunManager::~RunManager() {

@@ -76,6 +76,10 @@ bool CorryParser::parseCorryConfig(const QString &file, QJsonArray &output) {
     QJsonValue value = QString(split[1]).trimmed();
     currModule.insert(key, value);
   }
+  if (!currModule.isEmpty()) {
+    // store last remaining section
+    output << currModule;
+  }
   return true;
 }
 
