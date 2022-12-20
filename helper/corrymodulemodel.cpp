@@ -14,13 +14,14 @@ CorryConfigModel::CorryConfigModel(ModuleConfigurator *configurator,
 
 QVariant CorryConfigModel::headerData(int section, Qt::Orientation orientation,
                                       int role) const {
-  qDebug() << "calling header data";
+  Q_UNUSED(section);
+  Q_UNUSED(orientation);
+  Q_UNUSED(role);
   return QVariant();
 }
 
 int CorryConfigModel::rowCount(const QModelIndex &parent) const {
-  //  if (!parent.isValid())
-  //    return 0;
+  Q_UNUSED(parent);
 
   return mModules.length();
 }
@@ -70,6 +71,10 @@ QVariant CorryConfigModel::data(const QModelIndex &index, int role) const {
 bool CorryConfigModel::dropMimeData(const QMimeData *data,
                                     Qt::DropAction action, int row, int column,
                                     const QModelIndex &parent) {
+  Q_UNUSED(action);
+  Q_UNUSED(row);
+  Q_UNUSED(column);
+  Q_UNUSED(parent);
   if (canDecodeMime(*data)) {
     QStandardItem item;
     if (!decodeMimeData(*data, item)) {
@@ -111,6 +116,10 @@ bool CorryConfigModel::canDropMimeData(const QMimeData *data,
                                        Qt::DropAction action, int row,
                                        int column,
                                        const QModelIndex &parent) const {
+  Q_UNUSED(action);
+  Q_UNUSED(row);
+  Q_UNUSED(column);
+  Q_UNUSED(parent);
   return canDecodeMime(*data);
 }
 
@@ -134,6 +143,7 @@ bool CorryConfigModel::removeRows(int row, int count,
 }
 
 Qt::ItemFlags CorryConfigModel::flags(const QModelIndex &index) const {
+  Q_UNUSED(index);
   auto defaultFlags =
       Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDropEnabled;
 
