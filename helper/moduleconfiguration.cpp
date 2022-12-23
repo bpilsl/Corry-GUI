@@ -45,20 +45,36 @@ void ModuleConfiguration::initFromJson(const QJsonObject &obj) {
 
 void ModuleConfiguration::configureFromImport(const QJsonObject &obj) {
   foreach (const auto &par, obj.keys()) {
+    auto val = obj[par];
     if (par == "section_name") {
       continue;
     }
     if (par == "name") {
-      mDetectorName = obj[par].toString();
-    } else if (par == "type") {
-      mDetectorType = obj[par].toString();
-    } else {
-      setValue(par, obj[par]);
+      mDetectorName = val.toString();
+      continue;
     }
+    if (par == "type") {
+      mDetectorType = val.toString();
+      continue;
+    }
+    if (!unit(par).isEmpty()) {
+      // default value comes with unit, this means the parsed value most likely
+      // also has got a unit
+      auto number = numberExtractor.match(val.toString());
+      if (number.hasMatch()) {
+        setValue(par, number.captured(0).toDouble());
+      }
+      auto unit = unitExtractor.match(val.toString());
+      if (unit.hasMatch()) {
+        setUnit(par, unit.captured(0));
+      }
+      continue;
+    }
+    setValue(par, obj[par]);
   }
 }
 
-QString ModuleConfiguration::toCorryConfigSection() {
+QString ModuleConfiguration::toCorryConfigSection(bool printDefault) {
   QString out;
   QTextStream cfg(&out);
   cfg << "[" << mName << "]\n";
@@ -69,10 +85,11 @@ QString ModuleConfiguration::toCorryConfigSection() {
     cfg << "type = " << mDetectorType << "\n";
   }
   foreach (const auto &param, mParameters.keys()) {
-    // only print non default values
-    if (!mParameters[param]->isDefault()) {
-      qDebug() << "not default " << mParameters[param]->value << " "
-               << mParameters[param]->defaultValue;
+
+    if (printDefault) {
+      cfg << param2Str(param) << "\n";
+    } else if (!mParameters[param]->isDefault()) {
+      // only print non default values
       cfg << param2Str(param) << "\n";
     }
   }

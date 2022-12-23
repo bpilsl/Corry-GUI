@@ -58,7 +58,7 @@ void ModuleConfigurator::populateUi(ModuleConfiguration &config) {
       value->setData(config.value(param), Qt::EditRole);
     }
     if (value->data(Qt::EditRole) != config.defaultValue(param)) {
-      value->setForeground(QBrush(Qt::red));
+      value->setForeground(QBrush(Qt::blue));
     }
     row << value;
     auto unit = new QStandardItem();

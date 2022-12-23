@@ -192,7 +192,7 @@ bool CorryConfigModel::exportToCfg(const QString &file) {
     return false;
   }
   QTextStream out(&f);
-  out << mGlobalConfig->toCorryConfigSection() << "\n\n";
+  out << mGlobalConfig->toCorryConfigSection(true) << "\n\n";
   foreach (const auto &module, mModules) {
     out << module->toCorryConfigSection() << "\n\n";
   }
@@ -212,6 +212,8 @@ void CorryConfigModel::import(const QJsonArray &config) {
       auto m = new ModuleConfiguration(*temp, this);
       m->configureFromImport(o);
       mModules.append(m);
+    } else if (moduleName == "Corryvreckan") {
+      mGlobalConfig->configureFromImport(o);
     } else {
       qWarning() << "module " << moduleName
                  << " not available in parsed Corry installation";

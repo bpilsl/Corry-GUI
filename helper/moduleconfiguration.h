@@ -14,6 +14,9 @@ class ModuleConfiguration : public QObject {
   Q_OBJECT
 public:
   struct Parameter {
+    // TODO: value and default value might differ in terms of unit
+    //  isDefault function, parsing,...
+    //  maybe introduce struct for values with value and unit
     QVariant value, defaultValue;
     QString unit;
 
@@ -66,9 +69,12 @@ public:
   inline auto isEventLoader() const { return mName.startsWith("EventLoader"); }
 
   auto parameters() const { return mParameters.keys(); }
-  QString toCorryConfigSection();
+  QString toCorryConfigSection(bool printDefault = false);
 
 private:
+  const QRegularExpression numberExtractor = QRegularExpression(R"(\d+)");
+  const QRegularExpression unitExtractor = QRegularExpression(R"(\D+)");
+
   QString mName;
   QString mDetectorName, mDetectorType;
   QMap<QString, Parameter *> mParameters;
