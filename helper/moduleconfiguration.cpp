@@ -71,6 +71,8 @@ QString ModuleConfiguration::toCorryConfigSection() {
   foreach (const auto &param, mParameters.keys()) {
     // only print non default values
     if (!mParameters[param]->isDefault()) {
+      qDebug() << "not default " << mParameters[param]->value << " "
+               << mParameters[param]->defaultValue;
       cfg << param2Str(param) << "\n";
     }
   }

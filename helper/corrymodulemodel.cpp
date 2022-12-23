@@ -200,8 +200,6 @@ bool CorryConfigModel::exportToCfg(const QString &file) {
 }
 
 void CorryConfigModel::import(const QJsonArray &config) {
-  qDebug() << "model import";
-
   mModules.clear(); // FIXME: possible memory leak, delete pointers!
   for (const auto module : config) {
     if (!module.isObject()) {

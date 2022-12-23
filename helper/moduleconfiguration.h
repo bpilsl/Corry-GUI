@@ -22,7 +22,7 @@ public:
       defaultValue = defaultVal;
       this->unit = unit;
     }
-    auto isDefault() { return value == defaultValue; }
+    auto isDefault() { return !(value.isValid() && value != defaultValue); }
   };
 
   ModuleConfiguration(const QJsonObject &obj, QObject *parent = nullptr);
