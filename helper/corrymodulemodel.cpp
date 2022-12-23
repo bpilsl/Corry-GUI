@@ -211,8 +211,9 @@ void CorryConfigModel::import(const QJsonArray &config) {
     auto moduleName = o["section_name"].toString();
     auto temp = moduleTemplate(moduleName);
     if (temp != nullptr) {
-      temp->configureFromImport(o);
-      mModules.append(temp);
+      auto m = new ModuleConfiguration(*temp, this);
+      m->configureFromImport(o);
+      mModules.append(m);
     } else {
       qWarning() << "module " << moduleName
                  << " not available in parsed Corry installation";

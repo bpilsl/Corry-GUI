@@ -144,9 +144,12 @@ void MainWindow::importCfgClicked() {
     return;
   }
   auto parser = CorryParser(file, this);
-  mConfigModel.import(parser.modules());
-  auto tmp = parser.detectors();
   mGeometryBuilder.import(parser.detectors());
+  mModuleConfigurator->setAvailableDetectorNames(
+      mGeometryBuilder.availableDetectorNames());
+  mModuleConfigurator->setAvailableDetectorTypes(
+      mGeometryBuilder.availableDetectorTypes());
+  mConfigModel.import(parser.modules());
 }
 
 void MainWindow::on_pbAdd_clicked() {
