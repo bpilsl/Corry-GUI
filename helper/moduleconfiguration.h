@@ -30,6 +30,7 @@ public:
                       QObject *parent = nullptr);
 
   void initFromJson(const QJsonObject &obj);
+  void configureFromImport(const QJsonObject &obj);
   inline auto name() const { return mName; };
   inline auto defaultValue(const QString &key) const {
     return mParameters[key]->defaultValue;

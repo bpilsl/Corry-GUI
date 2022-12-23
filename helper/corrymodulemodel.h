@@ -33,7 +33,7 @@ public:
   bool parseAvailableModules(const QString &file);
   auto availableModules() { return mAvailableModules; };
   bool exportToCfg(const QString &file);
-  bool import(const QJsonArray &config);
+  void import(const QJsonArray &config);
   bool editItem(const QModelIndex &index);
   bool editGlobalCfg();
   QString detectorsFile();
@@ -42,6 +42,8 @@ signals:
   void eventLoadersChanged(QList<const ModuleConfiguration *> loaders);
 
 private:
+  ModuleConfiguration *moduleTemplate(const QString &name);
+
   const QString acceptableMimeType = "application/x-qstandarditemmodeldatalist";
 
   QList<ModuleConfiguration *> mModules;

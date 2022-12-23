@@ -199,8 +199,25 @@ bool CorryConfigModel::exportToCfg(const QString &file) {
   return true;
 }
 
-bool CorryConfigModel::import(const QJsonArray &config) {
+void CorryConfigModel::import(const QJsonArray &config) {
   qDebug() << "model import";
+
+  mModules.clear(); // FIXME: possible memory leak, delete pointers!
+  for (const auto module : config) {
+    if (!module.isObject()) {
+      continue;
+    }
+    auto o = module.toObject();
+    auto moduleName = o["section_name"].toString();
+    auto temp = moduleTemplate(moduleName);
+    if (temp != nullptr) {
+      temp->configureFromImport(o);
+      mModules.append(temp);
+    } else {
+      qWarning() << "module " << moduleName
+                 << " not available in parsed Corry installation";
+    }
+  }
 }
 
 bool CorryConfigModel::editItem(const QModelIndex &index) {
@@ -233,6 +250,15 @@ QList<const ModuleConfiguration *> CorryConfigModel::eventLoaders() {
     }
   }
   return retval;
+}
+
+ModuleConfiguration *CorryConfigModel::moduleTemplate(const QString &name) {
+  foreach (auto i, mAvailableModules) {
+    if (i->name() == name) {
+      return i;
+    }
+  }
+  return nullptr;
 }
 /**
  * @brief CorryConfigModel::decodeMimeData decode qt internal MIME data dropped

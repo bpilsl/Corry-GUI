@@ -43,6 +43,21 @@ void ModuleConfiguration::initFromJson(const QJsonObject &obj) {
   }
 }
 
+void ModuleConfiguration::configureFromImport(const QJsonObject &obj) {
+  foreach (const auto &par, obj.keys()) {
+    if (par == "section_name") {
+      continue;
+    }
+    if (par == "name") {
+      mDetectorName = obj[par].toString();
+    } else if (par == "type") {
+      mDetectorType = obj[par].toString();
+    } else {
+      setValue(par, obj[par]);
+    }
+  }
+}
+
 QString ModuleConfiguration::toCorryConfigSection() {
   QString out;
   QTextStream cfg(&out);
