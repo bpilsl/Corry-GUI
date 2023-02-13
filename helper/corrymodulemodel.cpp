@@ -136,7 +136,9 @@ bool CorryConfigModel::removeRows(int row, int count,
   }
 
   qDebug() << "removing r = " << row << " n = " << count;
-  mModules.remove(row, count);
+  for (int i = 0; i < count; i++) {
+    mModules.removeAt(row);
+  }
   endRemoveRows();
   emit eventLoadersChanged(eventLoaders());
   return true;

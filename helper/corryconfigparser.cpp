@@ -1,4 +1,5 @@
 #include "corryconfigparser.h"
+#include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 #include <QJsonObject>

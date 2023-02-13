@@ -143,7 +143,8 @@ void MainWindow::importCfgClicked() {
   if (file.isEmpty()) {
     return;
   }
-  auto parser = CorryParser(file, this);
+  //  auto parser = CorryParser(file, this);
+  CorryParser parser(file, this);
   mGeometryBuilder.import(parser.detectors());
   mModuleConfigurator->setAvailableDetectorNames(
       mGeometryBuilder.availableDetectorNames());

@@ -1,6 +1,7 @@
 #ifndef MODULECONFIGURATION_H
 #define MODULECONFIGURATION_H
 
+#include <QDebug>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
