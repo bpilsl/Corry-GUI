@@ -67,6 +67,7 @@ public:
   void deleteDetector(Detector &det);
   Detector *mDetector2Edit = nullptr;
   void import(const QList<Detector> &detectors);
+  bool parseDetectorLib(const QString &file);
 
 signals:
   void repainted();
@@ -74,7 +75,23 @@ signals:
 private slots:
   void on_buttonBox_accepted();
 
+  void on_cbDetLib_currentTextChanged(const QString &arg1);
+
 private:
+  struct LibEntry {
+    int nPixel[2], pitch[2];
+    QString type, name;
+    LibEntry(int pixelX, int pixelY, int pitchX, int pitchY, const QString &n,
+             const QString &t) {
+      nPixel[0] = pixelX;
+      nPixel[1] = pixelY;
+      pitch[0] = pitchX;
+      pitch[1] = pitchY;
+      name = n;
+      type = t;
+    }
+    LibEntry(){};
+  };
   const double acceptPosTolerance = 5.0;
 
   void alignDetectors();
@@ -82,6 +99,7 @@ private:
   Ui::GeometryBuilder *ui;
   QGraphicsScene mScene;
   QList<Detector> mDetectors;
+  QMap<QString, LibEntry> mDetectorLib;
 };
 
 #endif // GEOMETRYBUILDERDIALOG_H

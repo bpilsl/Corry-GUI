@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tabGeo">
        <attribute name="title">
@@ -61,13 +61,6 @@
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="0" column="0">
          <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="1">
-           <widget class="QPushButton" name="pbLoad">
-            <property name="text">
-             <string>Load</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="1">
            <widget class="QListView" name="lvModules">
             <property name="dragEnabled">
@@ -129,6 +122,7 @@
     </property>
     <addaction name="actionImport"/>
     <addaction name="actionExport"/>
+    <addaction name="actionLoad_GUI_Config"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -147,6 +141,11 @@
   <action name="actionExport">
    <property name="text">
     <string>Export</string>
+   </property>
+  </action>
+  <action name="actionLoad_GUI_Config">
+   <property name="text">
+    <string>Load GUI Config</string>
    </property>
   </action>
  </widget>

@@ -3,6 +3,8 @@
 
 #include <QFile>
 #include <QGraphicsItem>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QTextStream>
 
 GeometryBuilder::GeometryBuilder(QWidget *parent)
@@ -161,6 +163,53 @@ void GeometryBuilder::import(const QList<Detector> &detectors) {
   paintGeometry();
 }
 
+bool GeometryBuilder::parseDetectorLib(const QString &file) {
+  QFile f(file);
+  if (!f.open(QIODevice::ReadOnly)) {
+    return false;
+  }
+  ui->cbDetLib->clear();
+  mDetectorLib.clear();
+  auto jsonDocument = QJsonDocument::fromJson(f.readAll());
+  if (!jsonDocument.isArray()) {
+    return false;
+  }
+  auto arr = jsonDocument.array();
+  for (const auto &detector : arr) {
+    if (!detector.isObject()) {
+      continue;
+    }
+    auto o = detector.toObject();
+    auto name = o["name"].toString();
+    auto type = o["type"].toString();
+
+    int pixel[2], pitch[2];
+    if (!o["nPixel"].isArray() || !o["pitch"].isArray()) {
+      continue;
+    }
+    auto arr = o["nPixel"].toArray();
+    if (arr.size() != 2) {
+      continue;
+    }
+    pixel[0] = arr[0].toInt();
+    pixel[1] = arr[1].toInt();
+
+    arr = o["pitch"].toArray();
+    if (arr.size() != 2) {
+      continue;
+    }
+    pitch[0] = arr[0].toInt();
+    pitch[1] = arr[1].toInt();
+
+    LibEntry entry(pixel[0], pixel[1], pitch[0], pitch[1], name, type);
+    mDetectorLib[name] = entry;
+
+    ui->cbDetLib->addItem(name);
+  }
+
+  return true;
+}
+
 void GeometryBuilder::alignDetectors() {
   double maxHeight = 0.0;
   foreach (const auto &det, mDetectors) {
@@ -221,4 +270,13 @@ QString GeometryBuilder::Detector::toCorryConfig() const {
 
   cfg.flush();
   return out;
+}
+
+void GeometryBuilder::on_cbDetLib_currentTextChanged(const QString &arg1) {
+  ui->leName->setText(mDetectorLib[arg1].name + "_x");
+  ui->leType->setText(mDetectorLib[arg1].type);
+  ui->sbPitchX->setValue(mDetectorLib[arg1].pitch[0]);
+  ui->sbPitchY->setValue(mDetectorLib[arg1].pitch[1]);
+  ui->sbPixX->setValue(mDetectorLib[arg1].nPixel[0]);
+  ui->sbPixY->setValue(mDetectorLib[arg1].nPixel[1]);
 }

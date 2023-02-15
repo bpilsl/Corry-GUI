@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
           &MainWindow::exportToCfgClicked);
   connect(ui->actionImport, &QAction::triggered, this,
           &MainWindow::importCfgClicked);
+  connect(ui->actionLoad_GUI_Config, &QAction::triggered, this,
+          &MainWindow::processGuiConfig);
   ui->gvDetectorSetup->setScene(mGeometryBuilder.scene());
 
   ui->lvConfig->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -54,17 +56,6 @@ MainWindow::MainWindow(QWidget *parent)
 
   connect(ui->tabRun, &RunManager::updateEventLoaders, &mConfigModel,
           &CorryConfigModel::eventLoadersChanged);
-
-  mConfigModel.parseAvailableModules("modules.json");
-  mModulesModel.clear();
-  int i = 0;
-  foreach (const auto module, mConfigModel.availableModules()) {
-    auto item = new QStandardItem(module->name());
-    item->setData(module->name(), Qt::DisplayRole);
-    mModulesModel.setItem(i, item);
-    i++;
-  }
-  mModulesModel.sort(0);
 }
 
 MainWindow::~MainWindow() { delete ui; }
@@ -100,21 +91,35 @@ void MainWindow::deleteDetector() {
   mGeometryBuilder.deleteDetector(*mSelectedDetector);
 }
 
-void MainWindow::on_pbLoad_clicked() {
+void MainWindow::processGuiConfig() {
   auto file = QFileDialog::getOpenFileName(this);
-  if (!mConfigModel.parseAvailableModules(file)) {
-    qWarning() << "failed to parse file " << file;
+  QFile f(file);
+  if (!f.open(QIODevice::ReadOnly)) {
+    return;
+  }
+  auto jsonDocument = QJsonDocument::fromJson(f.readAll());
+  if (!jsonDocument.isObject()) {
+    return;
   }
 
-  mModulesModel.clear();
-  int i = 0;
-  foreach (const auto module, mConfigModel.availableModules()) {
-    auto item = new QStandardItem(module->name());
-    item->setData(module->name(), Qt::DisplayRole);
-    mModulesModel.setItem(i, item);
-    i++;
+  auto conf = jsonDocument.object();
+  auto availableModules = conf["availableModules"].toString();
+  auto availableDetectors = conf["availableDetectors"].toString();
+
+  if (mConfigModel.parseAvailableModules(availableModules)) {
+    mModulesModel.clear();
+    int i = 0;
+    foreach (const auto module, mConfigModel.availableModules()) {
+      auto item = new QStandardItem(module->name());
+      item->setData(module->name(), Qt::DisplayRole);
+      mModulesModel.setItem(i, item);
+      i++;
+    }
+    mModulesModel.sort(0);
   }
-  mModulesModel.sort(0);
+  if (!mGeometryBuilder.parseDetectorLib(availableDetectors)) {
+    qWarning() << "error importing detector lib";
+  }
 }
 
 void MainWindow::exportToCfgClicked() {

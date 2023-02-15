@@ -23,7 +23,6 @@ public:
   ~MainWindow();
 
 private slots:
-  void on_pbLoad_clicked();
   void exportToCfgClicked();
   void importCfgClicked();
   void on_pbAdd_clicked();
@@ -35,6 +34,7 @@ private slots:
   void fitSceneToGv();
   void deleteModule();
   void deleteDetector();
+  void processGuiConfig();
 
 private:
   Ui::MainWindow *ui;

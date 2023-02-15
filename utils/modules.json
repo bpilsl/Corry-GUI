@@ -1,0 +1,671 @@
+[
+    {
+        "module_name": "Corryvreckan",
+        "parameters": {
+            "log_level": "INFO",
+            "log_format": "",
+            "purge_output_directory": "false",
+            "detectors_file": "detectors.geo",
+            "detectors_file_updated": "detectors_updated.geo",
+            "histogram_file": "out.root",
+            "number_of_tracks": "-1",
+            "number_of_events": "-1"
+        }
+    },
+    {
+        "module_name": "EventLoaderTimepix3",
+        "parameters": {
+            "buffer_depth": "1000",
+            "input_directory": "",
+            "calibration_path": "",
+            "threshold": ""
+        }
+    },
+    {
+        "module_name": "AnalysisTrackIntercept",
+        "parameters": {}
+    },
+    {
+        "module_name": "AnalysisMaterialBudget",
+        "parameters": {
+            "cell_size": {
+                "value": "50",
+                "unit": "um"
+            },
+            "image_size": "{10, 10}",
+            "angle_cut": {
+                "value": "100",
+                "unit": "mrad"
+            },
+            "quantile": "0.9",
+            "min_cell_content": "20",
+            "update": "false"
+        }
+    },
+    {
+        "module_name": "EventLoaderTimepix1",
+        "parameters": {
+            "input_directory": ""
+        }
+    },
+    {
+        "module_name": "EventLoaderPCTMA",
+        "parameters": {
+            "max_hits": "1",
+            "config_directory": "",
+            "data_directory": "",
+            "config_files": "",
+            "seed_cut": "",
+            "neighbor_cut": "",
+            "cluster_cut": "",
+            "min_hit_length": "",
+            "frame_signal_cut": "",
+            "first_pixel_numbers": "",
+            "frontend_ids": "",
+            "trigger_overflow_size": "1u << 15u"
+        }
+    },
+    {
+        "module_name": "EventLoaderALiBaVa",
+        "parameters": {
+            "run": "0",
+            "timecut_low": "0",
+            "timecut_up": "std::numeric_limits<double>::max()",
+            "ignore_events": "1",
+            "calibration_constant": "1.0",
+            "chargecut": "0",
+            "polarity": "-1",
+            "input_directory": ""
+        }
+    },
+    {
+        "module_name": "EventLoaderMuPixTelescope",
+        "parameters": {
+            "is_sorted": "false",
+            "ts2_is_gray": "false",
+            "buffer_depth": "1000",
+            "time_offset": "0.0",
+            "reference_frequency": "125.",
+            "nbits_timestamp": "10",
+            "nbits_tot": "6",
+            "ckdivend": "0",
+            "ckdivend2": "7",
+            "use_both_timestamps": "false",
+            "input_directory": "",
+            "input_file": "",
+            "run": ""
+        }
+    },
+    {
+        "module_name": "AlignmentTrackChi2",
+        "parameters": {
+            "iterations": "3",
+            "prune_tracks": "false",
+            "align_position": "true",
+            "align_orientation": "true",
+            "max_associated_clusters": "1",
+            "max_track_chi2ndof": "10.",
+            "workers": "std::max(std::thread::hardware_concurrency() - 1, 1u)",
+            "fixed_planes": ""
+        }
+    },
+    {
+        "module_name": "EtaCorrection",
+        "parameters": {
+            "eta_formula_x": "\"[0] + [1]*x + [2]*x^2 + [3]*x^3 + [4]*x^4 + [5]*x^5\"",
+            "eta_formula_y": "\"[0] + [1]*x + [2]*x^2 + [3]*x^3 + [4]*x^4 + [5]*x^5\"",
+            "eta_constants_x": "",
+            "eta_constants_y": ""
+        }
+    },
+    {
+        "module_name": "Clustering4D",
+        "parameters": {
+            "neighbor_radius_row": "1",
+            "neighbor_radius_col": "1",
+            "charge_weighting": "true",
+            "use_earliest_pixel": "false",
+            "reject_by_roi": "false",
+            "time_cut_rel": "3.0"
+        }
+    },
+    {
+        "module_name": "Metronome",
+        "parameters": {
+            "event_length": {
+                "value": "10",
+                "unit": "us"
+            },
+            "triggers": "0",
+            "skip_time": "",
+            "skip_triggers": ""
+        }
+    },
+    {
+        "module_name": "ClusteringAnalog",
+        "parameters": {
+            "reject_by_roi": "",
+            "threshold_seed": "",
+            "threshold_neighbor": "",
+            "threshold_iteration": "",
+            "thresholdSNR_seed": "",
+            "thresholdSNR_neighbor": "",
+            "thresholdSNR_iteration": "",
+            "threshold_cluster": "",
+            "method": "",
+            "seeding_method": "",
+            "threshold_type": "",
+            "window_size": "",
+            "include_corners": "",
+            "use_trigger_timestamp": "",
+            "analysis_shape": "",
+            "calibration_pedestal": "",
+            "calibration_noise": ""
+        }
+    },
+    {
+        "module_name": "MaskCreatorTimepix3",
+        "parameters": {}
+    },
+    {
+        "module_name": "EventLoaderEUDAQ",
+        "parameters": {
+            "long_detector_id": "true",
+            "file_name": "",
+            "remap_detectors": ""
+        }
+    },
+    {
+        "module_name": "SequentialReader",
+        "parameters": {}
+    },
+    {
+        "module_name": "AnalysisSensorEdge",
+        "parameters": {
+            "inpixel_bin_size": {
+                "value": "1.0",
+                "unit": "um"
+            },
+            "exclude_corners": "true"
+        }
+    },
+    {
+        "module_name": "AlignmentDUTResidual",
+        "parameters": {
+            "iterations": "3",
+            "prune_tracks": "false",
+            "align_position": "true",
+            "align_orientation": "true",
+            "align_position_axes": "\"xy\"",
+            "align_orientation_axes": "\"xyz\"",
+            "max_associated_clusters": "1",
+            "max_track_chi2ndof": "10.",
+            "workers": "std::max(std::thread::hardware_concurrency() - 1, 1u)"
+        }
+    },
+    {
+        "module_name": "AnalysisPowerPulsing",
+        "parameters": {}
+    },
+    {
+        "module_name": "EventLoaderFASTPIX",
+        "parameters": {
+            "input_file": ""
+        }
+    },
+    {
+        "module_name": "DUTAssociation",
+        "parameters": {
+            "use_cluster_centre": "false",
+            "time_cut_rel": "3.0",
+            "spatial_cut_rel": "3.0"
+        }
+    },
+    {
+        "module_name": "OnlineMonitor",
+        "parameters": {
+            "canvas_title": "\"Corryvreckan Testbeam Monitor\"",
+            "update": "200",
+            "ignore_aux": "true",
+            "clustering_module": "\"Clustering4D\"",
+            "tracking_module": "\"Tracking4D\"",
+            "Correlations/%DETECTOR%/hitmap": "\"colz\"}}",
+            "residuals": "{{trackingModule + \"/%DETECTOR%/local_residuals/LocalResidualsX\"}}",
+            "correlation_x": "{{\"Correlations/%DETECTOR%/correlationX\"}}",
+            "Correlations/%DETECTOR%/correlationX_2Dlocal": "\"colz\"}}",
+            "correlation_y": "{{\"Correlations/%DETECTOR%/correlationY\"}}",
+            "Correlations/%DETECTOR%/correlationY_2Dlocal": "\"colz\"}}",
+            "charge_distributions": "{{clusteringModule + \"/%DETECTOR%/clusterCharge\"}}",
+            "event_times": "{{\"Correlations/%DETECTOR%/eventTimes\"}}",
+            "overview": "",
+            "dut_plots": "",
+            "tracking": "",
+            "hitmaps": "",
+            "correlation_x2d": "",
+            "correlation_y2d": ""
+        }
+    },
+    {
+        "module_name": "JSONWriter",
+        "parameters": {
+            "file_name": "\"data\"",
+            "include": "",
+            "exclude": ""
+        }
+    },
+    {
+        "module_name": "Tracking4D",
+        "parameters": {
+            "min_hits_on_track": "6",
+            "exclude_dut": "true",
+            "track_model": "\"straightline\"",
+            "momentum": {
+                "value": "5",
+                "unit": "GeV"
+            },
+            "max_plot_chi2": "50.0",
+            "volume_radiation_length": {
+                "value": "304.2",
+                "unit": "m"
+            },
+            "volume_scattering": "false",
+            "reject_by_roi": "false",
+            "unique_cluster_usage": "false",
+            "time_cut_rel": "3.0",
+            "spatial_cut_rel": "3.0",
+            "require_detectors": "",
+            "exclude_from_seed": "",
+            "timestamp_from": ""
+        }
+    },
+    {
+        "module_name": "Prealignment",
+        "parameters": {
+            "max_correlation_rms": {
+                "value": "6",
+                "unit": "mm"
+            },
+            "damping_factor": "1.0",
+            "method": "PrealignMethod::MEAN",
+            "fit_range_rel": "500",
+            "range_abs": {
+                "value": "10",
+                "unit": "mm"
+            },
+            "time_cut_rel": "3.0",
+            "fixed_planes": ""
+        }
+    },
+    {
+        "module_name": "TextWriter",
+        "parameters": {
+            "file_name": "\"data\"",
+            "include": "",
+            "exclude": ""
+        }
+    },
+    {
+        "module_name": "EventLoaderATLASpix",
+        "parameters": {
+            "input_directory": "",
+            "clock_cycle": {
+                "value": "6.25",
+                "unit": "ns"
+            },
+            "clkdivend": "0.",
+            "clkdivend2": "0.",
+            "high_tot_cut": "40",
+            "buffer_depth": "1000",
+            "time_offset": "0."
+        }
+    },
+    {
+        "module_name": "AnalysisFASTPIX",
+        "parameters": {
+            "time_cut_frameedge": {
+                "value": "20",
+                "unit": "ns"
+            },
+            "time_cut_deadtime": {
+                "value": "5",
+                "unit": "us"
+            },
+            "time_cut_trigger": {
+                "value": "250",
+                "unit": "ns"
+            },
+            "chi2ndof_cut": "3.",
+            "roi_margin_x": "1.0",
+            "roi_margin_y": "0.5",
+            "use_closest_cluster": "true",
+            "triangle_bins": "15",
+            "bin_size": {
+                "value": "2.5",
+                "unit": "um"
+            },
+            "hist_scale": "1.75",
+            "roi_inner": "true"
+        }
+    },
+    {
+        "module_name": "ImproveReferenceTimestamp",
+        "parameters": {
+            "signal_source": "\"W0013_G02\"",
+            "trigger_latency": {
+                "value": "0",
+                "unit": "ns"
+            },
+            "search_window": {
+                "value": "100",
+                "unit": "ns"
+            }
+        }
+    },
+    {
+        "module_name": "AnalysisEfficiency",
+        "parameters": {
+            "time_cut_frameedge": {
+                "value": "20",
+                "unit": "ns"
+            },
+            "chi2ndof_cut": "3.",
+            "inpixel_bin_size": {
+                "value": "1.0",
+                "unit": "um"
+            },
+            "inpixel_cut_edge": {
+                "value": "5.0",
+                "unit": "um"
+            },
+            "masked_pixel_distance_cut": "1.",
+            "spatial_cut_sensoredge": "1.",
+            "require_associated_cluster_on": ""
+        }
+    },
+    {
+        "module_name": "FileReader",
+        "parameters": {
+            "include": "",
+            "exclude": "",
+            "file_name": ""
+        }
+    },
+    {
+        "module_name": "AnalysisDUT",
+        "parameters": {
+            "time_cut_frameedge": {
+                "value": "20",
+                "unit": "ns"
+            },
+            "spatial_cut_sensoredge": "0.5",
+            "chi2ndof_cut": "3.",
+            "use_closest_cluster": "true",
+            "n_time_bins": "20000",
+            "time_binning": {
+                "value": "0.1",
+                "unit": "ns"
+            },
+            "correlations": "false",
+            "n_charge_bins": "1000",
+            "charge_histo_range": "1000.0",
+            "n_raw_bins": "1000",
+            "raw_histo_range": "1000.0",
+            "inpixel_bin_size": {
+                "value": "0.5",
+                "unit": "um"
+            }
+        }
+    },
+    {
+        "module_name": "AnalysisTimingATLASpix",
+        "parameters": {
+            "chi2ndof_cut": "3.",
+            "time_cut_frameedge": {
+                "value": "20",
+                "unit": "ns"
+            },
+            "high_tot_cut": "40",
+            "low_tot_cut": "10",
+            "timing_tail_cut": {
+                "value": "20",
+                "unit": "ns"
+            },
+            "calc_corrections": "false",
+            "tot_bin_example": "3",
+            "inpixel_bin_size": {
+                "value": "1.0",
+                "unit": "um"
+            },
+            "time_cut_rel": "3.0",
+            "cluster_charge_cut": "",
+            "cluster_size_cut": "",
+            "correction_file_row": "",
+            "correction_graph_row": "",
+            "correction_file_timewalk": "",
+            "correction_graph_timewalk": ""
+        }
+    },
+    {
+        "module_name": "Dummy",
+        "parameters": {}
+    },
+    {
+        "module_name": "EventLoaderTimestamp",
+        "parameters": {
+            "event_length": {
+                "value": "10",
+                "unit": "us"
+            },
+            "time_offset": {
+                "value": "0",
+                "unit": "ns"
+            },
+            "buffer_depth": "10",
+            "input_directory": ""
+        }
+    },
+    {
+        "module_name": "AnalysisParticleFlux",
+        "parameters": {
+            "azimuth_low": {
+                "value": "0",
+                "unit": "deg"
+            },
+            "azimuth_high": {
+                "value": "360",
+                "unit": "deg"
+            },
+            "azimuth_granularity": "36",
+            "zenith_low": {
+                "value": "0",
+                "unit": "deg"
+            },
+            "zenith_high": {
+                "value": "90",
+                "unit": "deg"
+            },
+            "zenith_granularity": "9",
+            "track_intercept": "0.0",
+            "output_plots_in_degrees": "true"
+        }
+    },
+    {
+        "module_name": "AnalysisTimingFASTPIX",
+        "parameters": {
+            "chi2ndof_cut": "3.",
+            "triangle_bins": "15"
+        }
+    },
+    {
+        "module_name": "MaskCreator",
+        "parameters": {
+            "method": "\"frequency\"",
+            "frequency_cut": "50",
+            "bins_occupancy": "128",
+            "density_bandwidth": "2.",
+            "sigma_above_avg_max": "5.",
+            "rate_max": "1.",
+            "mask_dead_pixels": "false",
+            "write_new_config": "false"
+        }
+    },
+    {
+        "module_name": "FileWriter",
+        "parameters": {
+            "file_name": "\"data\"",
+            "include": "",
+            "exclude": ""
+        }
+    },
+    {
+        "module_name": "AlignmentMillepede",
+        "parameters": {
+            "exclude_dut": "false",
+            "dofs": "{true, true, false, true, true, true}",
+            "iterations": "5",
+            "residual_cut": "0.05",
+            "residual_cut_init": "0.6",
+            "number_of_stddev": "0",
+            "convergence": "0.00001",
+            "sigmas": "{0.05, 0.05, 0.5, 0.005, 0.005, 0.005}"
+        }
+    },
+    {
+        "module_name": "TrackingMultiplet",
+        "parameters": {
+            "time_cut_rel": "3.0",
+            "spatial_cut_rel": "3.0",
+            "scatterer_position": "dut_vector.at(0)->displacement().Z()",
+            "upstream_detectors": "default_upstream_detectors",
+            "downstream_detectors": "default_downstream_detectors",
+            "min_hits_upstream": "m_upstream_detectors.size()",
+            "min_hits_downstream": "m_downstream_detectors.size()",
+            "scatterer_matching_cut": "",
+            "isolation_cut": "scatterer_matching_cut_ * 2.",
+            "track_model": "",
+            "momentum": "5000"
+        }
+    },
+    {
+        "module_name": "AnalysisTelescope",
+        "parameters": {
+            "chi2ndof_cut": "3."
+        }
+    },
+    {
+        "module_name": "DirectoryLoader",
+        "parameters": {}
+    },
+    {
+        "module_name": "EventLoaderWaveform",
+        "parameters": {
+            "input_directory": "",
+            "channels": "",
+            "columns": "",
+            "rows": ""
+        }
+    },
+    {
+        "module_name": "EventLoaderCLICpix",
+        "parameters": {
+            "input_directory": ""
+        }
+    },
+    {
+        "module_name": "EventDefinitionM26",
+        "parameters": {
+            "time_shift": "0",
+            "shift_triggers": "0",
+            "skip_time": "0.",
+            "add_begin": "0.",
+            "add_end": "0.",
+            "plane_pivot": "0.",
+            "pivot_min": "0.",
+            "pivot_max": "576.",
+            "add_trigger": "false",
+            "use_all_mimosa_hits": "false",
+            "eudaq_loglevel": "\"ERROR\"",
+            "pixelated_timing_layer": "true",
+            "detector_event_time": "",
+            "file_timestamp": "",
+            "file_duration": ""
+        }
+    },
+    {
+        "module_name": "EtaCalculation",
+        "parameters": {
+            "chi2ndof_cut": "100.",
+            "eta_formula_x": "\"[0] + [1]*x + [2]*x^2 + [3]*x^3 + [4]*x^4 + [5]*x^5\"",
+            "eta_formula_y": "\"[0] + [1]*x + [2]*x^2 + [3]*x^3 + [4]*x^4 + [5]*x^5\""
+        }
+    },
+    {
+        "module_name": "TreeWriterDUT",
+        "parameters": {
+            "file_name": "\"outputTuples.root\"",
+            "tree_name": "\"tree\""
+        }
+    },
+    {
+        "module_name": "EventLoaderEUDAQ2",
+        "parameters": {
+            "get_time_residuals": "false",
+            "get_tag_histograms": "false",
+            "get_tag_profiles": "false",
+            "ignore_bore": "true",
+            "veto_triggers": "false",
+            "sync_by_trigger": "false",
+            "skip_time": "0.",
+            "buffer_depth": "0",
+            "shift_triggers": "0",
+            "inclusive": "true",
+            "eudaq_loglevel": "\"ERROR\"",
+            "file_name": "",
+            "adjust_event_times": "",
+            "discard_raw_events": "",
+            "calibration_file": ""
+        }
+    },
+    {
+        "module_name": "FilterEvents",
+        "parameters": {
+            "min_tracks": "0",
+            "max_tracks": "100",
+            "only_tracks_on_dut": "false",
+            "min_clusters_per_plane": "0",
+            "max_clusters_per_plane": "100",
+            "filter_tags": "std::map<std::string, std::string>{}"
+        }
+    },
+    {
+        "module_name": "AnalysisTracks",
+        "parameters": {}
+    },
+    {
+        "module_name": "Correlations",
+        "parameters": {
+            "do_time_cut": "false",
+            "correlation_vs_time": "false",
+            "time_binning": {
+                "value": "1",
+                "unit": "ns"
+            },
+            "time_cut_rel": "3.0"
+        }
+    },
+    {
+        "module_name": "ClusteringSpatial",
+        "parameters": {
+            "use_trigger_timestamp": "false",
+            "charge_weighting": "true",
+            "reject_by_roi": "false"
+        }
+    },
+    {
+        "module_name": "EventLoaderCLICpix2",
+        "parameters": {
+            "discard_zero_tot": "false",
+            "input_directory": ""
+        }
+    }
+]

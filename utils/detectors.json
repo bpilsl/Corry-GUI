@@ -1,0 +1,19 @@
+[{
+		"name": "TLU",
+		"type": "tlu",
+		"nPixel": [0, 0],
+		"pitch": [0, 0]
+	},
+	{
+		"name": "RD50_MPW3_frame",
+		"type": "RD50_MPW3_frame",
+		"nPixel": [64, 64],
+		"pitch": [62, 62]
+	},
+	{
+		"name": "dssd_5_1",
+		"type": "dssd",
+		"nPixel": [512, 512],
+		"pitch": [100, 50]
+	}
+]
