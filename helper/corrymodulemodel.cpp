@@ -221,6 +221,7 @@ void CorryConfigModel::import(const QJsonArray &config) {
                  << " not available in parsed Corry installation";
     }
   }
+  emit dataChanged(this->index(0), index(mModules.length()));
 }
 
 bool CorryConfigModel::editItem(const QModelIndex &index) {
