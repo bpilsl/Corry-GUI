@@ -8,12 +8,14 @@
 		"name": "RD50_MPW3_frame",
 		"type": "RD50_MPW3_frame",
 		"nPixel": [64, 64],
-		"pitch": [62, 62]
+		"pitch": [62, 62],
+		"time_resolution": "50ns"
 	},
 	{
 		"name": "dssd_5_1",
 		"type": "dssd",
 		"nPixel": [512, 512],
-		"pitch": [100, 50]
+		"pitch": [100, 50],
+		"time_resolution": "1us"
 	}
 ]

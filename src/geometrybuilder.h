@@ -17,12 +17,12 @@ public:
     constexpr static double sensorDrawThickness = 10.0;
     QString name, type, role;
     int position[3], orientation[3], nmbOfPixels[2];
-    double pitch[2];
+    double pitch[2], timeResolution;
     QRectF grahicsRect;
     bool initialized;
     Detector(const QString &name, const QString &type, const QString &role,
-             int pixX, int pixY, double pitchX, double pitchY, int posZ,
-             int posX = 0, int posY = 0, int rotZ = 0, int rotX = 0,
+             int pixX, int pixY, double pitchX, double pitchY, double timeRes,
+             int posZ, int posX = 0, int posY = 0, int rotZ = 0, int rotX = 0,
              int rotY = 0) {
       this->name = name;
       this->type = type;
@@ -39,6 +39,7 @@ public:
       orientation[2] = rotZ;
       calcGraphics();
       initialized = true;
+      timeResolution = timeRes;
     }
     Detector() { initialized = false; }
 
@@ -79,16 +80,18 @@ private slots:
 
 private:
   struct LibEntry {
-    int nPixel[2], pitch[2];
+    int nPixel[2];
     QString type, name;
-    LibEntry(int pixelX, int pixelY, int pitchX, int pitchY, const QString &n,
-             const QString &t) {
+    double mTResolution, pitch[2];
+    LibEntry(int pixelX, int pixelY, double pitchX, double pitchY,
+             double timeRes, const QString &n, const QString &t) {
       nPixel[0] = pixelX;
       nPixel[1] = pixelY;
       pitch[0] = pitchX;
       pitch[1] = pitchY;
       name = n;
       type = t;
+      mTResolution = timeRes;
     }
     LibEntry(){};
   };

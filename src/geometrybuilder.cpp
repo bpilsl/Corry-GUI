@@ -182,6 +182,7 @@ bool GeometryBuilder::parseDetectorLib(const QString &file) {
     auto o = detector.toObject();
     auto name = o["name"].toString();
     auto type = o["type"].toString();
+    auto timeRes = o["time_resolution"].toDouble();
 
     int pixel[2], pitch[2];
     if (!o["nPixel"].isArray() || !o["pitch"].isArray()) {
@@ -201,7 +202,7 @@ bool GeometryBuilder::parseDetectorLib(const QString &file) {
     pitch[0] = arr[0].toInt();
     pitch[1] = arr[1].toInt();
 
-    LibEntry entry(pixel[0], pixel[1], pitch[0], pitch[1], name, type);
+    LibEntry entry(pixel[0], pixel[1], pitch[0], pitch[1], timeRes, name, type);
     mDetectorLib[name] = entry;
 
     ui->cbDetLib->addItem(name);
@@ -229,9 +230,9 @@ void GeometryBuilder::on_buttonBox_accepted() {
     Detector d(ui->leName->text(), ui->leType->text(),
                ui->cbRole->currentText(), ui->sbPixX->value(),
                ui->sbPixY->value(), ui->sbPitchX->value(),
-               ui->sbPitchY->value(), ui->sbPosZ->value(), ui->sbPosX->value(),
-               ui->sbPosY->value(), ui->sbRotZ->value(), ui->sbRotX->value(),
-               ui->sbRotY->value());
+               ui->sbPitchY->value(), ui->sbTimeRes->value(),
+               ui->sbPosZ->value(), ui->sbPosX->value(), ui->sbPosY->value(),
+               ui->sbRotZ->value(), ui->sbRotX->value(), ui->sbRotY->value());
     mDetectors.append(d);
   } else {
     detector->name = ui->leName->text();
@@ -244,6 +245,7 @@ void GeometryBuilder::on_buttonBox_accepted() {
     detector->position[0] = ui->sbPosX->value();
     detector->position[1] = ui->sbPosY->value();
     detector->position[2] = ui->sbPosZ->value();
+    detector->timeResolution = ui->sbTimeRes->value();
     detector->orientation[0] = ui->sbRotX->value();
     detector->orientation[1] = ui->sbRotY->value();
     detector->orientation[2] = ui->sbRotZ->value();
@@ -267,6 +269,7 @@ QString GeometryBuilder::Detector::toCorryConfig() const {
       << position[2] << "mm\n";
   cfg << "orientation = " << orientation[0] << "deg, " << orientation[1]
       << "deg, " << orientation[2] << "deg\n";
+  cfg << "time_resolution = " << timeResolution << "ns\n";
 
   cfg.flush();
   return out;

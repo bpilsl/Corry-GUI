@@ -52,6 +52,7 @@
         "module_name": "EventLoaderPCTMA",
         "parameters": {
             "max_hits": "1",
+            "shift_triggers": "0",
             "config_directory": "",
             "data_directory": "",
             "config_files": "",

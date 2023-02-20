@@ -138,9 +138,12 @@ void CorryParser::constructDetectors(const QJsonArray &geometry) {
       qWarning() << "invalid number of entries in: " << tmp;
     }
 
+    auto timeRes = obj["time_resolution"].toDouble();
+
     GeometryBuilder::Detector detector(
         name, type, role, nmbPixels[0], nmbPixels[1], pitch[0], pitch[1],
-        pos[2], pos[0], pos[1], orientation[2], orientation[0], orientation[1]);
+        timeRes, pos[2], pos[0], pos[1], orientation[2], orientation[0],
+        orientation[1]);
     mDetectors << detector;
   }
 }
