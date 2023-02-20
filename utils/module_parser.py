@@ -37,7 +37,7 @@ directory = sys.argv[1]
 output_file = sys.argv[2]
 out = open(output_file, 'w')
 modules = []
-globalConfig = {"module_name": "Corryvreckan", "parameters": {"log_level": "INFO", "log_format": "",
+globalConfig = {"module_name": "Corryvreckan", "parameters": {"log_level": "INFO", "log_format": "DEFAULT",
                                                               "purge_output_directory": "false",
                                                               "detectors_file": "detectors.geo",
                                                               "detectors_file_updated": "detectors_updated.geo",
